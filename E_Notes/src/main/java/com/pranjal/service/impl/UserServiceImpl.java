@@ -1,6 +1,9 @@
 package com.pranjal.service.impl;
 
+import com.pranjal.config.security.CustomUserDetails;
 import com.pranjal.dto.EmailRequest;
+import com.pranjal.dto.LoginRequest;
+import com.pranjal.dto.LoginResponse;
 import com.pranjal.dto.UserDto;
 import com.pranjal.enitity.AccountStatus;
 import com.pranjal.enitity.Role;
@@ -11,6 +14,10 @@ import com.pranjal.service.UserService;
 import com.pranjal.util.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -30,30 +37,52 @@ public class UserServiceImpl implements UserService {
     private Validation validation;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public Boolean register(UserDto userDto, String url) throws Exception {
         validation.userValidation(userDto);
-
-
         User user = modelMapper.map(userDto, User.class);
-        setRole(userDto, user);
 
+        setRole(userDto, user);
 
         AccountStatus status = AccountStatus.builder()
                 .isActive(false)
                 .verificationCode(UUID.randomUUID().toString())
                 .build();
         user.setStatus(status);
-
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
 
         if (!ObjectUtils.isEmpty(savedUser)) {
-            sendEmail(user,url);
+//            sendEmail(user,url);
             return true;
         }
 
             return false;
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+
+        Authentication authentication =   authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+
+        System.out.println(authentication.getPrincipal());
+        if (authentication.isAuthenticated()) {
+            CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+            String token = "randomString";
+            UserDto userDto = modelMapper.map(customUserDetails.getUser(), UserDto.class);
+
+            return LoginResponse.builder()
+                    .token(token)
+                    .user(userDto)
+                    .build();
+        }
+        return null;
+
     }
 
     private void sendEmail(User savedUser, String url) throws Exception {

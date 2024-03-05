@@ -105,7 +105,7 @@ public class Validation {
         if (StringUtils.isBlank(userDto.getPassword()) || !isValidPassword(userDto.getPassword())) {
             throw new IllegalArgumentException("Password must be at least 8 characters long, contain a number, an uppercase letter, and a special character.");
         }
-
+        
         if (StringUtils.isBlank(userDto.getMobno()) || !isValidMobileNumber(userDto.getMobno())) {
             throw new IllegalArgumentException("Invalid mobile number format.");
         }
@@ -145,7 +145,6 @@ public class Validation {
     }
 
     private boolean isValidMobileNumber(String mobno) {
-        // Allows 10-digit numbers or numbers with country code (e.g., +91XXXXXXXXXX)
         return Pattern.compile(Constants.MOBILE_REGEX).matcher(mobno).matches();
     }
 

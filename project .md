@@ -319,3 +319,28 @@ one to one relation with user
 
 
 the on of  advantage of creating a db is make little lossely, becasue in auto update it makes foregin keky because of cascade constraint it become defcult to update 
+
+now intializing the spring security
+adding dependencies & making its file in config.security package
+
+
+    because now in development hase now will not use passwordEncoder
+
+
+use of eager like in
+without eager here it unable to fetch so ggiving error from spring security
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Role> roles;
+
+
+SO TAckle that do like this
+@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Role> roles;
+    
+better to authentication by token method , 
+
+by     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    
+    authentecate

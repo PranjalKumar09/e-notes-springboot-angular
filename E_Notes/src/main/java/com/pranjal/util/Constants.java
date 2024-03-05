@@ -8,6 +8,5 @@ public class Constants {
     public static final String  NAME_REGEX  = "^[A-Za-z]{2,50}$",
             PASSWORD_REGEX =  "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$",
             EMAIL_REGEX =  "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
-            MOBILE_REGEX = "^(\\+\\d{1,3}[- ]?)?\\d{10}$";
-
+            MOBILE_REGEX = "^(\\+91[\\s]?)?[6-9]\\d{9}$";
 }
