@@ -37,7 +37,6 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse =  userService.login(loginRequest);
 
-            System.out.println("isjnf");
         if (ObjectUtils.isEmpty(loginResponse)) {
             return CommonUtil.createErrorResponseMessage("Invalid Credential", HttpStatus.BAD_REQUEST);
         }
