@@ -10,6 +10,7 @@ import com.pranjal.enitity.Role;
 import com.pranjal.enitity.User;
 import com.pranjal.repository.RoleRepository;
 import com.pranjal.repository.UserRepository;
+import com.pranjal.service.JwtService;
 import com.pranjal.service.UserService;
 import com.pranjal.util.Validation;
 import org.modelmapper.ModelMapper;
@@ -41,6 +42,8 @@ public class UserServiceImpl implements UserService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public Boolean register(UserDto userDto, String url) throws Exception {
@@ -70,10 +73,9 @@ public class UserServiceImpl implements UserService {
 
         Authentication authentication =   authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        System.out.println(authentication.getPrincipal());
-        if (authentication.isAuthenticated()) {
+            if (authentication.isAuthenticated()) {
             CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-            String token = "randomString";
+            String token = jwtService.generateToken(customUserDetails.getUser());
             UserDto userDto = modelMapper.map(customUserDetails.getUser(), UserDto.class);
 
             return LoginResponse.builder()
