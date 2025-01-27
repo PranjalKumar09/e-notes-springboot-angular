@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 public class CategoryDto {
+    private Integer id;
     private String name;
     private String description;
     private Boolean isActive;

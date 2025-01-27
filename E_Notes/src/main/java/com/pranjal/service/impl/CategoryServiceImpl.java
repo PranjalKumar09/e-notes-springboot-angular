@@ -54,14 +54,33 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Boolean saveCategory(CategoryDto categorydto) {
+    public Boolean saveCategory(CategoryDto categorydto) { // this is both save and update both
         Category category = modelMapper.map(categorydto, Category.class);
 
-        category.setIsDeleted(false);
-        category.setCreatedBy(1);
-        category.setCreatedOn(new Date());
+        if (category.getId() == null) {
+
+            category.setIsDeleted(false);
+            category.setCreatedBy(1);
+            category.setCreatedOn(new Date());
+        }
+        else {
+            updateCategory(category);
+        }
+        System.out.println(category);
         Category savedCategory = categoryRepository.save(category);
         return savedCategory != null;
+    }
+
+    private void updateCategory(Category category) {
+        Category updatedCategory = categoryRepository.findById(category.getId()).orElse(null);
+        System.out.println(updatedCategory);
+        if (updatedCategory != null) {
+            category.setCreatedOn(updatedCategory.getCreatedOn());
+            category.setIsDeleted(updatedCategory.getIsDeleted());
+            category.setCreatedBy(updatedCategory.getCreatedBy());
+
+            category.setUpdateBy(1); // NEEuserD TO UPDATED
+        }
     }
 
 }
