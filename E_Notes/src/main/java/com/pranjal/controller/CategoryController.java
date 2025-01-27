@@ -26,17 +26,39 @@ public class CategoryController {
         }
         else return new ResponseEntity<>("Not saved" , HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    @GetMapping("/active-category")
+    @GetMapping("/active")
     public ResponseEntity<?> getActiveCategory() {
         List<CategoryReponse> allCategory = categoryService.getActiveCategories();
 
         return new ResponseEntity<>(allCategory, HttpStatus.OK);
     }
 
-    @GetMapping("/category")
+    @GetMapping("/")
     public ResponseEntity<?> getAllCategory() {
         List<CategoryDto> allCategory = categoryService.getAllCategories();
 
         return new ResponseEntity<>(allCategory, HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
+        CategoryDto categoryDto = categoryService.getCategoryById(id);
+        if (categoryDto == null) {
+            return new ResponseEntity<>("Category not found with ID="+id, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
+        Boolean deleted = categoryService.deleteCategory(id);
+        if (deleted) {
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        }
+        else return new ResponseEntity<>("Not deleted" , HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+
 }
