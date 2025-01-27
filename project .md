@@ -86,7 +86,7 @@ after this for easier mapping created bean of ModelMapper in config
 
 apart from dto create response of repoecive class also#
 
-here we dont delete user data directly, it's not recommended so delete with so we have isDelete , os make delete in persepective of user
+here we dont delete user data directly, it's not recommended so delete with so we have isDelete , os make delete in persepective o  f user
 
  @DeleteMapping("/{id}")
    @GetMapping("/{id}")

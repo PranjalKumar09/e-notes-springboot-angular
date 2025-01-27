@@ -1,11 +1,7 @@
 package com.pranjal.enitity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 
 
 @Getter
@@ -13,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@ToString
 public class Category extends BaseModel {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
