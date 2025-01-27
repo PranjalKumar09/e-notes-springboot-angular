@@ -42,3 +42,46 @@ now setting project like industry ,
     then test will give in test , then client see, then in prod
 
 
+
+    now making stadards packages    
+
+    now as this contain overallapping attribute we can create BaseModel then extend the enities with it
+    
+    then 
+    @MappedSuperclass
+    public class BaseModel {
+
+
+    then create different classes, packages , ...
+
+
+    create controller like 
+    @RestController
+@RequestMapping("/api/v1/category")
+public class CategoryController {
+
+    @PostMapping("/save-category")
+    public ResponseEntity<?> saveCategory(){
+        return new ResponseEntity<>("saved", HttpStatus.CREATED);
+    }
+}
+
+
+
+
+
+
+now created tables ,
+
+user, category, file ,  notes, role , todo , user , user_role (mapping)\
+
+
+after this we will procddding parralellel to it continue the    
+
+
+now introducing the dto
+
+after this for easier mapping created bean of ModelMapper in config 
+
+
+apart from dto create response of repoecive class also#
