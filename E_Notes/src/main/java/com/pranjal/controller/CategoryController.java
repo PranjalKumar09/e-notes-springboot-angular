@@ -3,6 +3,7 @@ package com.pranjal.controller;
 import com.pranjal.dto.CategoryDto;
 import com.pranjal.dto.CategoryReponse;
 import com.pranjal.enitity.Category;
+import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,10 @@ public class CategoryController {
 
     @GetMapping("/")
     public ResponseEntity<?> getAllCategory() {
+        String name = null;
+        name.toUpperCase();
+
+
         List<CategoryDto> allCategory = categoryService.getAllCategories();
 
         return new ResponseEntity<>(allCategory, HttpStatus.OK);
@@ -42,7 +47,12 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
-        CategoryDto categoryDto = categoryService.getCategoryById(id);
+        CategoryDto categoryDto;
+        try {
+            categoryDto = categoryService.getCategoryById(id);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>("Not found with id=      "+id, HttpStatus.NOT_FOUND);
+        }
         if (categoryDto == null) {
             return new ResponseEntity<>("Category not found with ID="+id, HttpStatus.NOT_FOUND);
         }
