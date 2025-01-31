@@ -102,5 +102,56 @@ for exception we can create exception class too
 
 @lf4j for logging infor error hadnling
 
+
 now applying auditing
+
+now doing validation part
+
+<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-validation</artifactId>
+    <version>3.4.2</version>
+</dependency>
+
+
+like 
+public class CategoryDto {
+    private Integer id;
+    @NotBlank
+    @Min(value = 1)
+    @Max(value = 50)
+    private String name;
+
+    @NotBlank
+    @Min(value = 10)
+    @Max(value = 250
+    private String description;
+
+    @NotNull
+    private Boolean isActive;
+
+
+now to activate we have to do @Valid in controller
+
+
+@PostMapping("/save")
+    public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category) {
+
+
+@Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
+
+size for string, 
+min, max for numbers
+
+
+
+     DtoValidationException extends RuntimeException   error may happen during runtime so unchecked exception 
+
+
+    but instead of these all we should do Validation Class, and there check , where it will clean and industry standards
+
+    now validation should not in controller layer, instead in implementation layer , with util package validation component (class)
+
+    
 
