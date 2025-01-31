@@ -61,8 +61,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (category.getId() == null) {
 
             category.setIsDeleted(false);
-            category.setCreatedBy(1);
-            category.setCreatedOn(new Date());
+//            category.setCreatedBy(1);
+//            category.setCreatedOn(new Date());
         }
         else {
             updateCategory(category);
@@ -80,7 +80,8 @@ public class CategoryServiceImpl implements CategoryService {
             category.setIsDeleted(updatedCategory.getIsDeleted());
             category.setCreatedBy(updatedCategory.getCreatedBy());
 
-            category.setUpdateBy(1); // NEEuserD TO UPDATED
+//            category.setUpdateBy(1); // NEEuserD TO UPDATED
+//            category.setUpdateOn(new Date());
         }
     }
 
