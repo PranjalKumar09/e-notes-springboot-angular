@@ -102,6 +102,9 @@ for exception we can create exception class too
 
 @lf4j for logging infor error hadnling
 
+
+now applying auditing
+
 now doing validation part
 
 <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation -->
@@ -122,7 +125,7 @@ public class CategoryDto {
 
     @NotBlank
     @Min(value = 10)
-    @Max(value = 250)
+    @Max(value = 250
     private String description;
 
     @NotNull
@@ -151,3 +154,4 @@ min, max for numbers
     now validation should not in controller layer, instead in implementation layer , with util package validation component (class)
 
     
+
