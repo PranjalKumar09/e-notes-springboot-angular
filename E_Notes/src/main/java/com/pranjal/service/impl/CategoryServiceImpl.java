@@ -3,6 +3,7 @@ package com.pranjal.service.impl;
 import com.pranjal.dto.CategoryDto;
 import com.pranjal.dto.CategoryReponse;
 import com.pranjal.enitity.Category;
+import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.repository.CategoryRepository;
 import com.pranjal.service.CategoryService;
 import org.modelmapper.ModelMapper;
@@ -36,9 +37,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getCategoryById(Integer id) {
-        Optional<Category> category = categoryRepository.findByIdAndIsDeletedFalse(id);
-        return category.map(value -> modelMapper.map(value, CategoryDto.class)).orElse(null);
+    public CategoryDto getCategoryById(Integer id) throws ResourceNotFoundException {
+        Category category = categoryRepository.findByIdAndIsDeletedFalse(id).orElseThrow( () -> new ResourceNotFoundException("Category not found with id" + id) );
+        return modelMapper.map(category, CategoryDto.class);
     }
 
     @Override

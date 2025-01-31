@@ -92,3 +92,12 @@ here we dont delete user data directly, it's not recommended so delete with so w
    @GetMapping("/{id}")
 
    even these both can have same address (but have different method)
+
+
+for exception we can create exception class too
+
+@ControllerAdvice can attached above exception class
+
+
+
+@lf4j for logging infor error hadnling
