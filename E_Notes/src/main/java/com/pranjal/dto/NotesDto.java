@@ -1,10 +1,6 @@
 package com.pranjal.dto;
 
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,14 +10,27 @@ import java.util.Date;
 
 @Getter
 @Setter
-@MappedSuperclass
-public class CategoryDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class NotesDto {
     private Integer id;
-    private String name;
+    private String title;
     private String description;
-    private Boolean isActive;
+    private CategoryDto category;
+
     private Integer createdBy;
     private Date createdOn;
     private Integer updateBy;
     private Date updateOn;
+
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CategoryDto{
+        private Integer id;
+        private String name;
+    };
 }
