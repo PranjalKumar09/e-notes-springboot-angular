@@ -155,3 +155,8 @@ min, max for numbers
 
     
 
+
+    we should send data in generic way, genric format
+
+
+    
