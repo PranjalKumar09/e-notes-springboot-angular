@@ -3,6 +3,7 @@ package com.pranjal.service.impl;
 import com.pranjal.dto.CategoryDto;
 import com.pranjal.dto.CategoryReponse;
 import com.pranjal.enitity.Category;
+import com.pranjal.exception.ExistDataException;
 import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.repository.CategoryRepository;
 import com.pranjal.service.CategoryService;
@@ -64,6 +65,11 @@ public class CategoryServiceImpl implements CategoryService {
         // Validation Checking
 
         validation.CategoryValidation(categorydto);
+
+        Boolean exist = categoryRepository.existsByNameIgnoreCase(categorydto.getName().trim());
+
+        if (exist)
+            throw new ExistDataException("Category already exist");
 
         Category category = modelMapper.map(categorydto, Category.class);
 
