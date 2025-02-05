@@ -6,6 +6,7 @@ import com.pranjal.enitity.Category;
 import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.repository.CategoryRepository;
 import com.pranjal.service.CategoryService;
+import com.pranjal.util.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,10 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private Validation validation;
 
     @Override
     public List<CategoryDto> getAllCategories() {
@@ -44,6 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Boolean deleteCategory(Integer id) {
+
         Category category = categoryRepository.findById(id).orElse(null);
 
         if (category != null) {
@@ -56,6 +59,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Boolean saveCategory(CategoryDto categorydto) { // this is both save and update both
+
+
+        // Validation Checking
+
+        validation.CategoryValidation(categorydto);
+
         Category category = modelMapper.map(categorydto, Category.class);
 
         if (category.getId() == null) {
