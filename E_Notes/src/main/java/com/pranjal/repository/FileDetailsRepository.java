@@ -1,4 +1,10 @@
 package com.pranjal.repository;
 
-public interface FileRepository {
+import com.pranjal.enitity.FileDetails;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface FileDetailsRepository extends JpaRepository<FileDetails, Integer> {
+
 }
