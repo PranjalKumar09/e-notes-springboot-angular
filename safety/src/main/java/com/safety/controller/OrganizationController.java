@@ -1,50 +1,38 @@
 package com.safety.controller;
 
 
+import com.safety.dto.OrganizationDTO;
 import com.safety.dto.UserDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/organizations")
 public class OrganizationController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok().build();
-
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        // Delegate authentication to a service
-        // AuthResponse authResponse = authService.authenticate(loginDTO);
-        // return ResponseEntity.ok(authResponse);
-        return ResponseEntity.ok("Login successful (dummy response)");
+    public ResponseEntity<?> saveOrganization(@RequestBody OrganizationDTO organizationDTO) {
+        // OrganizationDTO createdOrg = organizationService.save(organizationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Organization saved (dummy response)");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Integer id) {
-        // UserDTO user = userService.findById(id);
-        return ResponseEntity.ok("User details (dummy response)");
+    public ResponseEntity<?> getOrganization(@PathVariable Integer id) {
+        // OrganizationDTO organization = organizationService.findById(id);
+        return ResponseEntity.ok("Organization details (dummy response)");
     }
 
-    // Update an existing user
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
-        // UserDTO updatedUser = userService.update(userDTO);
-        return ResponseEntity.ok("User updated (dummy response)");
+    public ResponseEntity<?> updateOrganization(@RequestBody OrganizationDTO organizationDTO) {
+        // OrganizationDTO updatedOrg = organizationService.update(organizationDTO);
+        return ResponseEntity.ok("Organization updated (dummy response)");
     }
 
-    // Delete a user by ID
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        // userService.delete(id);
-        return ResponseEntity.ok("User deleted (dummy response)");
+    public ResponseEntity<?> deleteOrganization(@PathVariable Integer id) {
+        // organizationService.delete(id);
+        return ResponseEntity.ok("Organization deleted (dummy response)");
     }
-
-
-
-
 }

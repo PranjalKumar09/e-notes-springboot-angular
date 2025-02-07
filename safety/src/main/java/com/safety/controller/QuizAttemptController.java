@@ -1,38 +1,39 @@
 package com.safety.controller;
 
 
+import com.safety.dto.QuizAttemptDTO;
 import com.safety.dto.QuizQuestionDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/quizattempt")
 public class QuizAttemptController {
 
+
     @PostMapping("/save")
-    public ResponseEntity<?> saveQuizQuestion(@RequestBody QuizQuestionDTO quizQuestionDTO) {
-        // QuizQuestionDTO createdQuestion = quizQuestionService.save(quizQuestionDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Quiz question saved (dummy response)");
+    public ResponseEntity<?> saveQuizAttempt(@RequestBody QuizAttemptDTO quizAttemptDTO) {
+        // QuizAttemptDTO createdAttempt = quizAttemptService.save(quizAttemptDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Quiz attempt saved (dummy response)");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getQuizQuestion(@PathVariable Integer id) {
-        // QuizQuestionDTO question = quizQuestionService.findById(id);
-        return ResponseEntity.ok("Quiz question details (dummy response)");
+    public ResponseEntity<?> getQuizAttempt(@PathVariable Integer id) {
+        // QuizAttemptDTO attempt = quizAttemptService.findById(id);
+        return ResponseEntity.ok("Quiz attempt details (dummy response)");
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateQuizQuestion(@RequestBody QuizQuestionDTO quizQuestionDTO) {
-        // QuizQuestionDTO updatedQuestion = quizQuestionService.update(quizQuestionDTO);
-        return ResponseEntity.ok("Quiz question updated (dummy response)");
+    public ResponseEntity<?> updateQuizAttempt(@RequestBody QuizAttemptDTO quizAttemptDTO) {
+        // QuizAttemptDTO updatedAttempt = quizAttemptService.update(quizAttemptDTO);
+        return ResponseEntity.ok("Quiz attempt updated (dummy response)");
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteQuizQuestion(@PathVariable Integer id) {
-        // quizQuestionService.delete(id);
-        return ResponseEntity.ok("Quiz question deleted (dummy response)");
+    public ResponseEntity<?> deleteQuizAttempt(@PathVariable Integer id) {
+        // quizAttemptService.delete(id);
+        return ResponseEntity.ok("Quiz attempt deleted (dummy response)");
     }
-
 
 }
