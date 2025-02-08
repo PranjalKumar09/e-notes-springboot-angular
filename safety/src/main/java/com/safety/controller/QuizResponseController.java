@@ -1,47 +1,41 @@
 package com.safety.controller;
 
 
-import com.safety.dto.UserDTO;
+import com.safety.dto.QuizResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users")
-public class QuizReponseController {
+@RequestMapping("/api/v1/QuizResponses")
+public class QuizResponseController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> saveQuizResponse(@RequestBody QuizResponseDTO QuizResponseDTO) {
         return ResponseEntity.ok().build();
 
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) {
-        // Delegate authentication to a service
-        // AuthResponse authResponse = authService.authenticate(loginDTO);
-        // return ResponseEntity.ok(authResponse);
+    public ResponseEntity<?> login(@RequestParam String QuizResponsename, @RequestParam String password) {
         return ResponseEntity.ok("Login successful (dummy response)");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable Integer id) {
-        // UserDTO user = userService.findById(id);
-        return ResponseEntity.ok("User details (dummy response)");
+    public ResponseEntity<?> getQuizResponse(@PathVariable Integer id) {
+        return ResponseEntity.ok("QuizResponse details (dummy response)");
     }
 
-    // Update an existing user
+    // Update an existing QuizResponse
     @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO) {
-        // UserDTO updatedUser = userService.update(userDTO);
-        return ResponseEntity.ok("User updated (dummy response)");
+    public ResponseEntity<?> updateQuizResponse(@RequestBody QuizResponseDTO QuizResponseDTO) {
+        return ResponseEntity.ok("QuizResponse updated (dummy response)");
     }
 
-    // Delete a user by ID
+    // Delete a QuizResponse by ID
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        // userService.delete(id);
-        return ResponseEntity.ok("User deleted (dummy response)");
+    public ResponseEntity<?> deleteQuizResponse(@PathVariable Integer id) {
+        return ResponseEntity.ok("QuizResponse deleted (dummy response)");
     }
 
 
