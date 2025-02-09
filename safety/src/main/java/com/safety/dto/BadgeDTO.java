@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @MappedSuperclass
-public class BadgeDto {
+public class BadgeDTO {
     private Integer id;
     private String badgeName;
     private String description;

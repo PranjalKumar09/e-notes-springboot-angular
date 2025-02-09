@@ -9,4 +9,8 @@ import lombok.Setter;
 @Setter
 @MappedSuperclass
 public class LeaderboardDTO {
+    private Integer id;
+    private Integer totalScore;
+    private Integer userId;
+    private Integer rank;
 }

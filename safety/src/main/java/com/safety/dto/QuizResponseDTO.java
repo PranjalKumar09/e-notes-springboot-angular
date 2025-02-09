@@ -9,4 +9,8 @@ import lombok.Setter;
 @Setter
 @MappedSuperclass
 public class QuizResponseDTO {
+    private Integer id;
+    private Boolean isCorrect;
+    private Integer quizAttemptId;
+    private Integer questionId;
 }
