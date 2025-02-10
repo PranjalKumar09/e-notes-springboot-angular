@@ -1,17 +1,20 @@
 package com.pranjal.controller;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pranjal.dto.NotesDto;
+import com.pranjal.enitity.FileDetails;
 import com.pranjal.service.NotesService;
-import com.pranjal.util.Validation;
+import com.pranjal.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,18 +28,31 @@ public class NotesController {
     public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file) throws Exception {
         Boolean saveNotes = notesService.saveNotes(notes, file);
         if (saveNotes) {
-            return   Validation.CommonUtil.createBuildResponseMessage("Notes saved", HttpStatus.CREATED);
+            return   CommonUtil.createBuildResponseMessage("Notes saved", HttpStatus.CREATED);
         }
-        return Validation.CommonUtil.createErrorResponseMessage("Notes not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+        return CommonUtil.createErrorResponseMessage("Notes not saved", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @GetMapping("/")
     public ResponseEntity<?> getAllNotes() {
         List<NotesDto> notesDtoList = notesService.getAllNotes();
         if (notesDtoList.isEmpty()) {
-            return  Validation.CommonUtil.createErrorResponseMessage("", HttpStatus.NO_CONTENT);
+            return  CommonUtil.createErrorResponseMessage("", HttpStatus.NO_CONTENT);
         }
-        return Validation.CommonUtil.createBuildResponse(notesDtoList, HttpStatus.OK);
+        return CommonUtil.createBuildResponse(notesDtoList, HttpStatus.OK);
     }
 
+    @GetMapping("/download/{id}")
+    public ResponseEntity<?> getNotes(@PathVariable Integer id) throws Exception {
+
+        FileDetails fileDetails = notesService.getFileDetails(id);
+        byte[] downloadFile = notesService.downloadFile(fileDetails);
+
+        HttpHeaders headers = new HttpHeaders();
+        String contentType  =   CommonUtil.getContentType(fileDetails.getOriginalFileName());
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentDispositionFormData("attachment", fileDetails.getOriginalFileName());
+
+        return  ResponseEntity.ok().headers(headers).body(downloadFile);
+    }
 }
