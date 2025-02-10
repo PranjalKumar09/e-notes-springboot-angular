@@ -28,8 +28,9 @@ public class    User extends BaseModel {
     private String email;
 
     @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    private String password;
 
+    // Each user belongs to an institution/organization.
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
