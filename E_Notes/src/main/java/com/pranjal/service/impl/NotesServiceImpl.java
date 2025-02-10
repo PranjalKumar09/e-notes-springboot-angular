@@ -99,14 +99,26 @@ public class NotesServiceImpl implements NotesService {
         NotesDto notesDto = mapper.readValue(notes, NotesDto.class);
         Notes notesMap = modelMapper.map(notesDto, Notes.class);
 
+        if (!ObjectUtils.isEmpty(notesDto.getId())){
+            updateNotes(notesDto, file);
+        }
 
         if (!ObjectUtils.isEmpty(file)) {
             notesMap.setFileDetails(saveFileDetails(file));
         }
+
         checkCategoryExist(notesDto.getCategory());
 
         Notes savedNotes = notesRepository.save(notesMap);
         return !ObjectUtils.isEmpty(savedNotes);
+    }
+
+    private void updateNotes(NotesDto notesDto, MultipartFile file) throws Exception {
+        Notes existNotes    = notesRepository.findById(notesDto.getId()).orElseThrow(()->new ResourceNotFoundException("invalid notes id"));
+        if (ObjectUtils.isEmpty(file) && !ObjectUtils.isEmpty(existNotes.getFileDetails())) {
+
+            notesDto.setFileDetails(modelMapper.map(existNotes.getFileDetails(), NotesDto.FilesDto.class));
+        }
     }
 
     private FileDetails saveFileDetails(MultipartFile file) throws IOException {
