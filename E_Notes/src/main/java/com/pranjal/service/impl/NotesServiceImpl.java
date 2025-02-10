@@ -3,6 +3,7 @@ package com.pranjal.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pranjal.dto.NotesDto;
+import com.pranjal.dto.NotesResponse;
 import com.pranjal.enitity.FileDetails;
 import com.pranjal.enitity.Notes;
 import com.pranjal.exception.ResourceNotFoundException;
@@ -10,10 +11,14 @@ import com.pranjal.repository.CategoryRepository;
 import com.pranjal.repository.FileDetailsRepository;
 import com.pranjal.repository.NotesRepository;
 import com.pranjal.service.NotesService;
+import com.pranjal.util.CommonUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
@@ -25,9 +30,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Arrays;import java.util.List;
 import java.util.UUID;
+
+import static com.pranjal.util.CommonUtil.ALLOWED_EXTENSIONS;
 
 @Service
 public class NotesServiceImpl implements NotesService {
@@ -64,6 +70,26 @@ public class NotesServiceImpl implements NotesService {
         return fileDetailsRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("File is not available"));
 }
 
+    @Override
+    public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
+
+        Pageable pageable =  PageRequest.of(pageNo, pageSize);
+        Page<Notes> pageNotes = notesRepository.findByCreatedBy(userId, pageable);
+
+        List<NotesDto>  notesDtos =  pageNotes.get().map(notesDto -> modelMapper.map(notesDto, NotesDto.class)).toList();
+
+        NotesResponse notesResponse = NotesResponse.builder()
+                .pageSize(pageNotes.getSize())
+                .totalPages(pageNotes.getTotalPages())
+                .totalElements(pageNotes.getTotalElements())
+                .isFirst(pageNotes.isFirst())
+                .isLast(pageNotes.isLast())
+                .notes(notesDtos)
+                .build();
+
+
+        return notesResponse;
+    }
 
 
     @Override
@@ -83,7 +109,6 @@ public class NotesServiceImpl implements NotesService {
         return !ObjectUtils.isEmpty(savedNotes);
     }
 
-    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "png", "pdf", "docx", "xlsx");
     private FileDetails saveFileDetails(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             return null;

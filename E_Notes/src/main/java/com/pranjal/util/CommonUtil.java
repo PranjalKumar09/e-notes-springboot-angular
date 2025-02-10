@@ -6,8 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class CommonUtil {
+    public static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "png", "pdf", "docx", "xlsx");
+
     public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus status) {
 
         GenericResponse response = GenericResponse.builder()
