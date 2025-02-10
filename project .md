@@ -196,4 +196,14 @@ public class NotesDto {
 
 error solved -> recived error by extended by throwable but finally figured out i should have to do with exception for custom message in custom error 
 
+even for file we have to do according to industry standards
+also we have feautre like if string is too long like
+java_programming.....pdf
+show as java.prog.pdf
 
+we have attributes like random name , original name, show name
+
+for files have apache commons
+
+model mapper between classes maded , entities
+object mapper between string and object 

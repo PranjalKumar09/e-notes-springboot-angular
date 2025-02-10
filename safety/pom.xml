@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com</groupId>
-    <artifactId>E_Notes</artifactId>
+    <artifactId>safety</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>E_Notes</name>
-    <description>E_Notes</description>
+    <name>safety</name>
+    <description>safety</description>
     <url/>
     <licenses>
         <license/>
@@ -30,12 +30,12 @@
         <java.version>21</java.version>
     </properties>
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>3.2.2</version>
         </dependency>
+
 
 
         <dependency>
@@ -75,12 +75,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
             <version>3.4.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.18.0</version>
-        </dependency>
+
 
 
     </dependencies>
