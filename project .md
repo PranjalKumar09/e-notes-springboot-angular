@@ -219,3 +219,47 @@ using this repose in download -> return  ResponseEntity.ok().headers(headers).bo
 
             NotesResponse notesResponse = NotesResponse.builder().build();;
 
+
+
+now implementing git update branch
+
+we will delete data after 30 days, 
+    introducing isDeleted variable
+
+    it will soft delete
+
+    similarly making restore option for user
+
+
+
+now implementing schheudalr deleting at 7 day period
+
+
+eg =>
+
+@Component
+public class NotesSchedular {
+
+    int i = 0;
+    @Scheduled(fixedRate = 1000)
+    public void deleteNotesScheduler(){
+        System.out.println(i++);
+    }
+}
+1000 means 1 second
+also we should do in LocalDate not date 
+
+
+@Component
+public class NotesSchedular {
+
+    @Autowired
+    private NotesRepository notesRepository;
+
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteNotesScheduler(){
+        LocalDateTime cutoffDate = LocalDateTime.now().minusMinutes(5);
+        List<Notes> deleteNotes = notesRepository.findByIsDeletedAndDeletedAtBefore(true, cutoffDate);
+        notesRepository.deleteAll(deleteNotes);
+    }
+}

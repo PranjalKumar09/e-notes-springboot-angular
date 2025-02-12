@@ -18,8 +18,17 @@ public interface NotesService {
 
 
     byte[] downloadFile(FileDetails fileDetails) throws Exception;
-
-    FileDetails getFileDetails(Integer id) throws ResourceNotFoundException, Exception;
+    FileDetails getFileDetails(Integer id) throws Exception;
 
     NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize);
+
+    void softDeleteNotes(Integer id) throws Exception;
+
+    void restoreNotes(Integer id)throws Exception;
+
+    List<NotesDto> getUserRecycleBinNotes(Integer userId);
+
+    void hardDeleteNotes(Integer id) throws Exception;
+
+    void emptyRecycleBin(Integer userId);
 }
