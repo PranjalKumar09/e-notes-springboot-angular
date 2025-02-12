@@ -1,4 +1,10 @@
 package com.safety.repository;
 
-public interface OrganizationRepository {
+import com.safety.enitity.Organization;
+import jakarta.persistence.EntityListeners;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface OrganizationRepository extends JpaRepository<Organization, Integer> {
 }
