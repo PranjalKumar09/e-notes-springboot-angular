@@ -263,3 +263,9 @@ public class NotesSchedular {
         notesRepository.deleteAll(deleteNotes);
     }
 }
+
+nnow implementing favourite notes, by making it entity, (bw user and notes)
+
+
+
+also in real world making of tables is not done by update instead done spefically by manullay first then we make different entities in backend
