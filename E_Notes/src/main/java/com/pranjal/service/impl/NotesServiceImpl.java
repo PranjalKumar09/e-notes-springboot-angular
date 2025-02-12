@@ -11,7 +11,6 @@ import com.pranjal.repository.CategoryRepository;
 import com.pranjal.repository.FileDetailsRepository;
 import com.pranjal.repository.NotesRepository;
 import com.pranjal.service.NotesService;
-import com.pranjal.util.CommonUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import static com.pranjal.util.CommonUtil.ALLOWED_EXTENSIONS;
@@ -74,29 +77,73 @@ public class NotesServiceImpl implements NotesService {
     public NotesResponse getAllNotesByUser(Integer userId, Integer pageNo, Integer pageSize) {
 
         Pageable pageable =  PageRequest.of(pageNo, pageSize);
-        Page<Notes> pageNotes = notesRepository.findByCreatedBy(userId, pageable);
-
+        Page<Notes> pageNotes = notesRepository.findByCreatedByAndIsDeletedFalse(userId, pageable);
         List<NotesDto>  notesDtos =  pageNotes.get().map(notesDto -> modelMapper.map(notesDto, NotesDto.class)).toList();
 
-        NotesResponse notesResponse = NotesResponse.builder()
+
+        return NotesResponse.builder()
                 .pageSize(pageNotes.getSize())
                 .totalPages(pageNotes.getTotalPages())
                 .totalElements(pageNotes.getTotalElements())
                 .isFirst(pageNotes.isFirst())
                 .isLast(pageNotes.isLast())
                 .notes(notesDtos)
+                .pageNo(pageNo)
                 .build();
-
-
-        return notesResponse;
     }
 
+
+    @Override
+    public void softDeleteNotes(Integer id) throws Exception {
+
+        Notes notes    = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Invalid notes id!"));
+        notes.setIsDeleted(true);
+        notes.setDeletedAt(LocalDateTime.now());
+        notesRepository.save(notes);
+
+    }
+
+    @Override
+    public void restoreNotes(Integer id) throws Exception {
+        Notes notes    = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Invalid notes id!"));
+        notes.setIsDeleted(false);
+        notes.setDeletedAt(null);
+        notesRepository.save(notes);
+
+    }
+
+    @Override
+    public List<NotesDto> getUserRecycleBinNotes(Integer userId) {
+        List<Notes> notesList = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
+
+
+        return   notesList.stream().map(notes -> modelMapper.map(notes, NotesDto.class)).toList() ;
+    }
+
+    @Override
+    public void hardDeleteNotes(Integer id) throws Exception {
+        Notes notes    = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Invalid notes id!"));
+        if (notes.getIsDeleted())
+            notesRepository.delete(notes);
+        else throw new IllegalArgumentException("Sorry you can't hard delete note");
+    }
+
+    @Override
+    public void emptyRecycleBin(Integer userId) {
+        List<Notes> notesList = notesRepository.findByCreatedByAndIsDeletedTrue(userId);
+        if (!notesList.isEmpty())
+            notesRepository.deleteAll(notesList);
+    }
 
     @Override
     public Boolean saveNotes(String notes, MultipartFile file) throws Exception {
         // category validation
         ObjectMapper mapper = new ObjectMapper();
         NotesDto notesDto = mapper.readValue(notes, NotesDto.class);
+
+        notesDto.setDeletedAt(null);
+        notesDto.setIsDeleted(false);
+
         Notes notesMap = modelMapper.map(notesDto, Notes.class);
 
         if (!ObjectUtils.isEmpty(notesDto.getId())){
