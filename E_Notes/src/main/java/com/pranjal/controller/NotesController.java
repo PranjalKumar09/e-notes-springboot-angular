@@ -1,6 +1,7 @@
 package com.pranjal.controller;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pranjal.dto.NotesDto;
 import com.pranjal.service.NotesService;
 import com.pranjal.util.Validation;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,10 +22,10 @@ public class NotesController {
     private NotesService notesService;
 
     @PostMapping("/")
-    public ResponseEntity<?> saveNotes(@RequestBody NotesDto notesDto) throws Exception {
-        Boolean saveNotes = notesService.saveNotes(notesDto);
+    public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file) throws Exception {
+        Boolean saveNotes = notesService.saveNotes(notes, file);
         if (saveNotes) {
-            return   Validation.CommonUtil.createErrorResponseMessage("Notes saved", HttpStatus.CREATED);
+            return   Validation.CommonUtil.createBuildResponseMessage("Notes saved", HttpStatus.CREATED);
         }
         return Validation.CommonUtil.createErrorResponseMessage("Notes not saved", HttpStatus.INTERNAL_SERVER_ERROR);
     }
