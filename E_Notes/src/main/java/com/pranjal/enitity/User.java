@@ -7,20 +7,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class FileDetails {
-    @Id
+public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Integer id;
-    private String uploadFileName;
-    private String originalFileName;
-    private String displayFileName;
-    private String path;
-    private Long fileSize;
+    private String firstName;
+    private String LastName;
+    private String email;
+    private String password;
+    private String mobno;
+
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Role> roles;
 
 }

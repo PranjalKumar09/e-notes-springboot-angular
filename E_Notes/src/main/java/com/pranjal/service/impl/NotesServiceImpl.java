@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static com.pranjal.util.CommonUtil.ALLOWED_EXTENSIONS;
+import static com.pranjal.util.Constants.ALLOWED_EXTENSIONS;
 import static org.springframework.util.ObjectUtils.*;
 
 @Service

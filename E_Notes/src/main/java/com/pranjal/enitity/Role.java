@@ -13,14 +13,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class FileDetails {
-    @Id
+public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Integer id;
-    private String uploadFileName;
-    private String originalFileName;
-    private String displayFileName;
-    private String path;
-    private Long fileSize;
-
+    private String name;
 }
