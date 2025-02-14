@@ -272,3 +272,23 @@ also in real world making of tables is not done by update instead done speficall
 
 
 now implementing the copy notes
+
+
+now making todo moudle
+
+for tasks, we have to send mails , for rmeinders
+for todo , in progrress, completed
+push notification, email reminders
+
+
+for status we can create intger & link it to numbers
+
+
+    for dto of todo, instead of orginal intger for status, but we can do static class for this 
+    
+    in lombok we should separate annonation for inner class,
+
+    and in statusDto, attribute are enum values (status, name)
+
+
+    we will validate todo ,in validation class 
