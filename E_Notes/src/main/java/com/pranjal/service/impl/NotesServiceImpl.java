@@ -22,7 +22,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,14 +31,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import static com.pranjal.util.CommonUtil.ALLOWED_EXTENSIONS;
+import static org.springframework.util.ObjectUtils.*;
 
 @Service
 public class NotesServiceImpl implements NotesService {
@@ -149,23 +146,23 @@ public class NotesServiceImpl implements NotesService {
 
         Notes notesMap = modelMapper.map(notesDto, Notes.class);
 
-        if (!ObjectUtils.isEmpty(notesDto.getId())){
+        if (!isEmpty(notesDto.getId())){
             updateNotes(notesDto, file);
         }
 
-        if (!ObjectUtils.isEmpty(file)) {
+        if (!isEmpty(file)) {
             notesMap.setFileDetails(saveFileDetails(file));
         }
 
         checkCategoryExist(notesDto.getCategory());
 
         Notes savedNotes = notesRepository.save(notesMap);
-        return !ObjectUtils.isEmpty(savedNotes);
+        return !isEmpty(savedNotes);
     }
 
     private void updateNotes(NotesDto notesDto, MultipartFile file) throws Exception {
         Notes existNotes    = notesRepository.findById(notesDto.getId()).orElseThrow(()->new ResourceNotFoundException("invalid notes id"));
-        if (ObjectUtils.isEmpty(file) && !ObjectUtils.isEmpty(existNotes.getFileDetails())) {
+        if (isEmpty(file) && !isEmpty(existNotes.getFileDetails())) {
 
             notesDto.setFileDetails(modelMapper.map(existNotes.getFileDetails(), NotesDto.FilesDto.class));
         }
@@ -225,8 +222,6 @@ public class NotesServiceImpl implements NotesService {
 
     }
 
-
-
     @Override
     public void favouriteNote(Integer noteId) throws  Exception{
         Integer userId  = 2;
@@ -255,5 +250,22 @@ public class NotesServiceImpl implements NotesService {
                 .stream()
                 .map(favouriteNote -> modelMapper.map(favouriteNote, FavouriteNoteDto.class))
                 .toList();
+    }
+
+    @Override
+    public Boolean copyNotes(Integer id) throws Exception  {
+        Notes notes    = notesRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Invalid notes id!"));
+
+        Notes copyNote = Notes.builder()
+                .title(notes.getTitle())
+                .description(notes.getDescription())
+                .category(notes.getCategory())
+                .isDeleted(false)
+                .build();
+
+        // TODO : Need to check user validation
+        
+        Notes savedNotes =   notesRepository.save(copyNote);
+        return !isEmpty(savedNotes);
     }
 }
