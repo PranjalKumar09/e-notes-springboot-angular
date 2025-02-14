@@ -1,13 +1,14 @@
 package com.pranjal.util;
 
 import com.pranjal.dto.CategoryDto;
+import com.pranjal.dto.TodoDto;
+import com.pranjal.enums.TodoStatus;
+import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.exception.ValidationException;
-import com.pranjal.handler.GenericResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -52,4 +53,21 @@ public class Validation {
         if (!error.isEmpty())
             throw new ValidationException(error);
     }
+
+
+    public void validateTodoStatus(TodoDto todo) throws Exception {
+        if (todo == null || todo.getStatus() == null || todo.getStatus().getId() == null) {
+            throw new IllegalArgumentException("Todo or Status cannot be null");
+        }
+
+        Integer statusId = todo.getStatus().getId();
+
+        boolean isValid = Arrays.stream(TodoStatus.values())
+                .anyMatch(st -> st.getId().equals(statusId));
+
+        if (!isValid) {
+            throw new ResourceNotFoundException("Invalid Status ID: " + statusId);
+        }
+    }
+
 }

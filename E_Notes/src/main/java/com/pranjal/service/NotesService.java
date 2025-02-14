@@ -40,3 +40,4 @@ public interface NotesService {
 
     Boolean  copyNotes(Integer id) throws Exception;
 }
+
