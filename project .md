@@ -292,3 +292,17 @@ for status we can create intger & link it to numbers
 
 
     we will validate todo ,in validation class 
+
+
+
+now implementing user module
+
+making one to many list<role> too
+
+better to setup the AuthController instead of UserController
+
+it is never recommended to do update hibernatre auto update, , industry procedure should we applied and none done
+
+user_roles 
+user (one) to roles(many)
+table are user , role
