@@ -2,11 +2,9 @@ package com.pranjal.controller;
 
 import com.pranjal.dto.CategoryDto;
 import com.pranjal.dto.CategoryReponse;
-import com.pranjal.enitity.Category;
-import com.pranjal.enitity.CommonUtil;
 import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.service.CategoryService;
-import jakarta.validation.Valid;
+import com.pranjal.util.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,18 +23,18 @@ public class CategoryController {
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category) {
         Boolean saveCategory = categoryService.saveCategory(category);
         if (saveCategory) {
-           return CommonUtil.createBuildResponse("saved success", HttpStatus.CREATED);
+           return Validation.CommonUtil.createBuildResponse("saved success", HttpStatus.CREATED);
         }
-        else return  CommonUtil.createErrorResponseMessage("save failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        else return  Validation.CommonUtil.createErrorResponseMessage("save failed", HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @GetMapping("/active")
     public ResponseEntity<?> getActiveCategory() {
         List<CategoryReponse> allCategory = categoryService.getActiveCategories();
         if (!allCategory.isEmpty()) {
-            return CommonUtil.createBuildResponse(allCategory, HttpStatus.OK);
+            return Validation.CommonUtil.createBuildResponse(allCategory, HttpStatus.OK);
         }
 
-        return CommonUtil.createBuildResponse("category not found", HttpStatus.NOT_FOUND);
+        return Validation.CommonUtil.createBuildResponse("category not found", HttpStatus.NOT_FOUND);
 //        return new ResponseEntity<>(allCategory, HttpStatus.OK);
     }
 
@@ -45,10 +43,10 @@ public class CategoryController {
         List<CategoryDto> allCategory = categoryService.getAllCategories();
 
         if (!allCategory.isEmpty()) {
-            return CommonUtil.createBuildResponse(allCategory, HttpStatus.OK);
+            return Validation.CommonUtil.createBuildResponse(allCategory, HttpStatus.OK);
         }
 
-        return CommonUtil.createBuildResponse("category not found", HttpStatus.NOT_FOUND);
+        return Validation.CommonUtil.createBuildResponse("category not found", HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/{id}")
@@ -58,11 +56,11 @@ public class CategoryController {
             categoryDto = categoryService.getCategoryById(id);
         } catch (ResourceNotFoundException e) {
 //            return new ResponseEntity<>("Not found with id=      "+id, HttpStatus.NOT_FOUND);
-            return CommonUtil.createBuildResponse("category not found " + id, HttpStatus.NOT_FOUND);
+            return Validation.CommonUtil.createBuildResponse("category not found " + id, HttpStatus.NOT_FOUND);
         }
         if (categoryDto == null) {
 //            return new ResponseEntity<>("Category not found with ID=  "+id, HttpStatus.NOT_FOUND);
-                return CommonUtil.createBuildResponse("category not found " + id, HttpStatus.NOT_FOUND);
+                return Validation.CommonUtil.createBuildResponse("category not found " + id, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(categoryDto, HttpStatus.OK);
 
@@ -73,10 +71,10 @@ public class CategoryController {
         Boolean deleted = categoryService.deleteCategory(id);
         if (deleted) {
 //            return new ResponseEntity<>("Deleted", HttpStatus.OK);
-            return CommonUtil.createBuildResponse("Deleted", HttpStatus.OK);
+            return Validation.CommonUtil.createBuildResponse("Deleted", HttpStatus.OK);
         }
 //        else return new ResponseEntity<>("Not deleted" , HttpStatus.INTERNAL_SERVER_ERROR);
-        else return CommonUtil.createErrorResponseMessage("delete failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        else return Validation.CommonUtil.createErrorResponseMessage("delete failed", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
