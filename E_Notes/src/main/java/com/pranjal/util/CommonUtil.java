@@ -1,6 +1,7 @@
 package com.pranjal.util;
 
 import com.pranjal.handler.GenericResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -136,5 +137,11 @@ public class CommonUtil {
             default:
                 return "application/octet-stream"; // Default for unknown types
         }
+    }
+
+    public static String getUrl(HttpServletRequest request) {
+        String apiUrl = request.getRequestURL().toString();
+        apiUrl = apiUrl.replace(request.getServletPath(), "");
+        return apiUrl;
     }
 }

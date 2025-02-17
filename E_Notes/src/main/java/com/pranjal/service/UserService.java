@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    Boolean register(UserDto userDto);
+    Boolean register(UserDto userDto, String url) throws Exception;
 
 }

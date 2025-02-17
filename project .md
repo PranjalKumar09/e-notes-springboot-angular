@@ -306,3 +306,16 @@ it is never recommended to do update hibernatre auto update, , industry procedur
 user_roles 
 user (one) to roles(many)
 table are user , role
+
+now we have to on the turn on html by passing true
+
+        mimeMessageHelper.setText(emailRequest.getMessage(), true);
+
+so to do verfication set isActive variable in user module
+
+to deal with varoiuse account things ,like expire, account, verfication code, etc we can make seprate object enitity AccountStatus
+
+one to one relation with user
+
+
+the on of  advantage of creating a db is make little lossely, becasue in auto update it makes foregin keky because of cascade constraint it become defcult to update 
