@@ -8,18 +8,20 @@ import com.pranjal.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-    @RestController
-    @RequestMapping("/api/v1/category")
+@RestController
+@RequestMapping("/api/v1/category")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category) {
         Boolean saveCategory = categoryService.saveCategory(category);
         if (saveCategory) {
@@ -28,6 +30,7 @@ public class CategoryController {
         else return  CommonUtil.createErrorResponseMessage("save failed", HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @GetMapping("/active")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<?> getActiveCategory() {
         List<CategoryReponse> allCategory = categoryService.getActiveCategories();
         if (!allCategory.isEmpty()) {
@@ -39,6 +42,7 @@ public class CategoryController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllCategory() {
         List<CategoryDto> allCategory = categoryService.getAllCategories();
 
@@ -50,6 +54,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
         CategoryDto categoryDto;
         try {
@@ -67,6 +72,8 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+
     public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
         Boolean deleted = categoryService.deleteCategory(id);
         if (deleted) {

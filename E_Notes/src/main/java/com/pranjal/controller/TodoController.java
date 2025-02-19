@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ public class TodoController {
 
 
     @PostMapping("/")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> saveTodo(@RequestBody TodoDto todoDto) throws Exception {
 
         Boolean saveTodo = todoService.saveTodo(todoDto);
@@ -45,12 +47,14 @@ public class TodoController {
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getById(@PathVariable Integer id) throws Exception{
        TodoDto todoDto = todoService.getTodoById(id);
        return CommonUtil.createBuildResponse(todoDto, HttpStatus.OK);
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getAllTodoByUser() throws Exception{
         List<TodoDto> todoDtoList = todoService.getTodoByUser();
         if (CollectionUtils.isEmpty(todoDtoList)){
