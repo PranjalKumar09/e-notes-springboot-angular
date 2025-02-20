@@ -344,3 +344,91 @@ by     @Autowired
 
     
     authentecate
+after that making jwt fileter in security
+
+now role based authorization
+
+like this     @PreAuthorize("hasRole('ADMIN')")
+
+
+now enable this we must enable method security from security , by annotation
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+in db we dont nee3d ROLES_
+
+
+FOR USing any roles
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+
+
+NOW it is important to know that now excetpion handler not able to handle exception at filter layer
+
+exceptioun like 
+
+
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+
+        try {
+            String username = null;
+            String token = null;
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7);
+                username =  jwtService.extractUsername(token);
+            }
+            if (username!=null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if (jwtService.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                }
+            }
+        }
+        catch (Exception e) {
+           generateResponseError(response, e);
+            return;
+        }
+        filterChain.doFilter(request, response);
+    }
+
+    private void generateResponseError(HttpServletResponse response, Exception e) throws IOException {
+        response.setContentType("application/json");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+        Object body =   GenericResponse.builder()
+                .status("failed")
+                .message(e.getMessage())
+                .responseStatus(HttpStatus.UNAUTHORIZED)
+                .build().create().getBody();
+
+        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+
+    }
+}
+
+    private Claims extractAllClaims(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(decryptKey(secretKey))
+                    .build().parseSignedClaims(token).getPayload();
+        return claims;
+        }
+        catch (ExpiredJwtException e) {
+            throw new JwtTokenExpiredException("Token is Expired");
+        }
+        catch (JwtException e) {
+            throw new JwtTokenExpiredException("Invalid Jwt Token");
+        }
+        catch (Exception e) {
+            throw e;
+        }
+
+    }
