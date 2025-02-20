@@ -16,10 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -34,6 +37,8 @@ public class NotesServiceImpl implements NotesService {
     private ModelMapper modelMapper;
     @Autowired
     private CategoryRepository categoryRepository;
+
+
     @Autowired
     private FileDetailsRepository fileDetailsRepository;
     @Value("${file.upload.path}")
@@ -45,6 +50,20 @@ public class NotesServiceImpl implements NotesService {
         return  notesRepository.findAll().stream().map(notes -> modelMapper.map(notes, NotesDto.class)).toList();
 
     }
+
+    @Override
+    public byte[] downloadFile(FileDetails fileDetails) throws Exception {
+
+        InputStream inputStream = new FileInputStream(fileDetails.getPath());
+        return StreamUtils.copyToByteArray(inputStream);
+
+    }
+
+    @Override
+    public FileDetails getFileDetails(Integer id) throws Exception {
+        return fileDetailsRepository.findById(id).orElseThrow(() ->new ResourceNotFoundException("File is not available"));
+}
+
 
 
     @Override
