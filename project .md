@@ -207,3 +207,11 @@ for files have apache commons
 
 model mapper between classes maded , entities
 object mapper between string and object 
+
+
+
+
+using this repose in download -> return  ResponseEntity.ok().headers(headers).body(downloadFile);
+    
+
+    notice in this there is no new,
