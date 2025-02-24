@@ -6,7 +6,7 @@ import com.pranjal.dto.UserDto;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface UserService {
+public interface AuthService {
     Boolean register(UserDto userDto, String url) throws Exception;
 
     LoginResponse login(LoginRequest loginRequest);
