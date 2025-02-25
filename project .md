@@ -161,4 +161,39 @@ min, max for numbers
 
     infact making seprate branch handler for genric response
 
-    
+
+Now making notes class
+in dto for other class table we should take dto of it only 
+
+
+like @Getter
+@Setter
+@MappedSuperclass
+public class NotesDto {
+    private Integer id;
+    private String title;
+    private String description;
+    private CategoryDto category;
+
+    private Integer createdBy;
+    private Date createdOn;
+    private Integer updateBy;
+    private Date updateOn;
+
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class CategoryDto{
+        private Integer id;
+        private String name;
+    };
+}
+
+
+
+error solved -> recived error by extended by throwable but finally figured out i should have to do with exception for custom message in custom error 
+
+
