@@ -11,7 +11,7 @@ import com.pranjal.enitity.User;
 import com.pranjal.repository.RoleRepository;
 import com.pranjal.repository.UserRepository;
 import com.pranjal.service.JwtService;
-import com.pranjal.service.UserService;
+import com.pranjal.service.AuthService;
 import com.pranjal.util.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.UUID;
 
 
 @Service
-public class UserServiceImpl implements UserService {
+public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         if (!ObjectUtils.isEmpty(savedUser)) {
-//            sendEmail(user,url);
+//            emailSendForRegister(user,url); // TODO uncomment this line at last
             return true;
         }
 
@@ -87,11 +87,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private void sendEmail(User savedUser, String url) throws Exception {
+    private void emailSendForRegister(User savedUser, String url) throws Exception {
         String verificationLink = url + "/api/v1/home/verify?id=" + savedUser.getId() + "&vc=" + savedUser.getStatus().getVerificationCode();
         String message = String.format(
-                "<!DOCTYPE html>" +
-                        "<html>" +
                         "<head>" +
                         "<style>" +
                         "body { font-family: Arial, sans-serif; line-height: 1.6; }" +
@@ -110,8 +108,7 @@ public class UserServiceImpl implements UserService {
                         "<p>Best Regards,</p>" +
                         "<p><b>Pranjal Kumar Shukla</b><br>E Notes Team</p>" +
                         "</div>" +
-                        "</body>" +
-                        "</html>",
+                        "</body>" ,
                 savedUser.getFirstName(), savedUser.getFirstName(), verificationLink);
 
         EmailRequest emailRequest = EmailRequest.builder()
