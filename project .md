@@ -432,3 +432,232 @@ exceptioun like
         }
 
     }
+
+now making uuser response , we will not keep password in that, 
+also making status dto, rest evverythign same likie in user dto
+
+
+now we can make this 
+   public static User getLoggedInUser(){
+        CustomUserDetails logUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return logUser.getUser();
+    }
+
+now if we type cast here in user response rather doing model mapping is better 
+
+If you haven't added any specific role-based access control (such as role annotations like @PreAuthorize, @Secured, or other security mechanisms) to your @GetMapping("/profile") method, then yes, the endpoint will be accessible to all users
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+log details-> of line -- > 
+authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+values=>
+this = {JwtFilter@13093} 
+request = {HeaderWriterFilter$HeaderWriterRequest@15150} 
+response = {HeaderWriterFilter$HeaderWriterResponse@15151} 
+filterChain = {FilterChainProxy$VirtualFilterChain@15152} 
+authHeader = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJpZCI6MSwibmFtZSI6IkFETUlOIn1dLCJpZCI6MjUsInN0YXR1cyI6ZmFsc2UsInN1YiI6ImFkbWluQGFiLmMiLCJpYXQiOjE3NDAxMTYyMDgsImV4cCI6MTc0MDIwMjYwOH0.DpbUreQaVXqcAncvgAOR-HqVo42kerk4FQG0NBB4Amg"
+username = "admin@ab.c"
+token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJpZCI6MSwibmFtZSI6IkFETUlOIn1dLCJpZCI6MjUsInN0YXR1cyI6ZmFsc2UsInN1YiI6ImFkbWluQGFiLmMiLCJpYXQiOjE3NDAxMTYyMDgsImV4cCI6MTc0MDIwMjYwOH0.DpbUreQaVXqcAncvgAOR-HqVo42kerk4FQG0NBB4Amg"
+userDetails = {CustomUserDetails@15155} 
+authentication = {UsernamePasswordAuthenticationToken@15156} "UsernamePasswordAuthenticationToken [Principal=com.pranjal.config.security.CustomUserDetails@4394d549, Credentials=[PROTECTED], Authenticated=true, Details=null, Granted Authorities=[ROLE_ADMIN]]"
+
+
+ of line -- > 
+SecurityContextHolder.getContext().setAuthentication(authentication);
+
+ values-> 
+ authentication = {UsernamePasswordAuthenticationToken@15156} "UsernamePasswordAuthenticationToken [Principal=com.pranjal.config.security.CustomUserDetails@4394d549, Credentials=[PROTECTED], Authenticated=true, Details=WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null], Granted Authorities=[ROLE_ADMIN]]"
+ principal = {CustomUserDetails@15155} 
+ credentials = null
+ authorities = {Collections$UnmodifiableRandomAccessList@15161}  size = 1
+  0 = {SimpleGrantedAuthority@15166} "ROLE_ADMIN"
+   role = "ROLE_ADMIN"
+ details = {WebAuthenticationDetails@15162} "WebAuthenticationDetails [RemoteIpAddress=0:0:0:0:0:0:0:1, SessionId=null]"
+  remoteAddress = "0:0:0:0:0:0:0:1"
+  sessionId = null
+ authenticated = true
+
+ of line -> 
+ filterChain.doFilter(request, response);
+ values ->
+ this = {JwtFilter@13093} 
+request = {HeaderWriterFilter$HeaderWriterRequest@15150} 
+ response = {HeaderWriterFilter$HeaderWriterResponse@15151} 
+ request = {StrictHttpFirewall$StrictFirewalledRequest@15170} "FirewalledRequest[ org.apache.catalina.connector.RequestFacade@716cb2c8]"
+  this$0 = {StrictHttpFirewall@15177} 
+  request = {RequestFacade@15178} 
+response = {HeaderWriterFilter$HeaderWriterResponse@15151} 
+ response = {DisableEncodeUrlFilter$DisableEncodeUrlResponseWrapper@15180} 
+ request = {StrictHttpFirewall$StrictFirewalledRequest@15170} "FirewalledRequest[ org.apache.catalina.connector.RequestFacade@716cb2c8]"
+ this$0 = {HeaderWriterFilter@15179} 
+ disableOnCommitted = false
+ contentLength = 0
+ contentWritten = 0
+filterChain = {FilterChainProxy$VirtualFilterChain@15152} 
+ originalChain = {FilterChainProxy$lambda@15182} 
+ additionalFilters = {ArrayList@15183}  size = 13
+ size = 13
+ currentPosition = 6
+
+
+ from function 
+
+     @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        try {
+            String authHeader = request.getHeader("Authorization");
+            String username = null;
+            String token = null;
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7);
+                username =  jwtService.extractUsername(token);
+            }
+            if (username!=null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if (jwtService.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                }
+            }
+        }
+        catch (Exception e) {
+           generateResponseError(response, e);
+            return;
+        }
+
+        filterChain.doFilter(request, response);
+    }
+some my own findings from this
+* got correct username
+* bebugging not going in catch
+
+
+
+
+
+
+
+
+
+
+
+
+this is secuirty config
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+    public class SecurityConfig {
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtFilter jwtFilter;
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+
+
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+//		provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**", "/api/v1/home/**")
+                        .permitAll().anyRequest().authenticated())
+                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        ;
+
+        return http.build();
+    }
+}
+
+Signature mismatch & Expired token already handled with messages
+
+now making PasswordChangeRequest in Dto
+
+now setting the password Reset Token option in verfiy option
+
+    @GetMapping("/send-email-reset")
+    private ResponseEntity<?> sendEmailForPasswordReset() {
+        
+        return null;
+    }
+
+    @GetMapping("/verfy-paswd-link")
+    private ResponseEntity<?> verifyPasswordResetLink(){
+
+        return null;
+    }
+
+    @GetMapping("/reset-paswd")
+    private ResponseEntity<?> resetPassword(){
+        
+        return null;
+    }
+
+
+
+     public static User getLoggedInUser(){
+
+        try{
+        CustomUserDetails logUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return logUser.getUser();
+
+        }catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    now reset-=apswed -> inhereit from parent (very imp to remember
+    =)
+
+
+
+
+
+
+
+
+now we will implement the searching
+    in notes by title,descriptoin, cateogry
+    
