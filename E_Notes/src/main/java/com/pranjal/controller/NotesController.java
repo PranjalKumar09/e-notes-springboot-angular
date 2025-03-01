@@ -4,6 +4,7 @@ package com.pranjal.controller;
 import com.pranjal.dto.NotesDto;
 import com.pranjal.dto.NotesResponse;
 import com.pranjal.enitity.FileDetails;
+import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.service.NotesService;
 import com.pranjal.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,13 +58,52 @@ public class NotesController {
     }
 
     @GetMapping("/user-notes")
-    public ResponseEntity<?> getAllUserNotes(@RequestParam(defaultValue = "10") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
+    public ResponseEntity<?> getAllUserNotes(@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
         Integer userId = 2;
         NotesResponse notesDtoList = notesService.getAllNotesByUser(userId, pageNo, pageSize);
 
+        return CommonUtil.createBuildResponse(notesDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/delete/{id}")
+    public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws Exception {
+        notesService.softDeleteNotes(id);
+
+        return CommonUtil.createBuildResponseMessage("Deleted Success", HttpStatus.OK);
+    }
+
+    @GetMapping("/restore/{id}")
+    public ResponseEntity<?> restoreNotes(@PathVariable Integer id) throws Exception {
+        notesService.restoreNotes(id);
+
+        return CommonUtil.createBuildResponseMessage("Notes Recovered Successfully", HttpStatus.OK);
+    }
+
+    @GetMapping("/recycle-bin")
+    public ResponseEntity<?> getUserRecycleBinNotes() {
+        Integer userId = 2;
+        List<NotesDto> notesDtoList  = notesService.getUserRecycleBinNotes(userId);
 
         return CommonUtil.createBuildResponse(notesDtoList, HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> hardDeleteNotes(@PathVariable Integer id) throws Exception {
+        notesService.hardDeleteNotes(id);
+
+        return CommonUtil.createBuildResponseMessage("Deleted Success", HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/delete-recycle-bin")
+    public ResponseEntity<?> emptyRecycleBin()  {
+        Integer userId = 2;
+
+        notesService.emptyRecycleBin(userId);
+
+        return CommonUtil.createBuildResponse("notesDtoList", HttpStatus.OK);
+    }
+
 
 
 
