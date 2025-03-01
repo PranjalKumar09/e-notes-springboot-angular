@@ -1,6 +1,7 @@
 package com.pranjal.controller;
 
 
+import com.pranjal.dto.FavouriteNoteDto;
 import com.pranjal.dto.NotesDto;
 import com.pranjal.dto.NotesResponse;
 import com.pranjal.enitity.FileDetails;
@@ -102,6 +103,37 @@ public class NotesController {
         notesService.emptyRecycleBin(userId);
 
         return CommonUtil.createBuildResponse("notesDtoList", HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/fav/{noteId}")
+    public ResponseEntity<?> favouriteNote(@PathVariable Integer noteId) throws Exception {
+        notesService.favouriteNote(noteId);
+
+        return CommonUtil.createBuildResponseMessage("Notes added Favorite", HttpStatus.CREATED);
+    }
+
+
+    @DeleteMapping("/un-fav/{favNotTd}")
+    public ResponseEntity<?> unFavouriteNote(@PathVariable Integer favNotTd) throws Exception {
+        notesService.unFavouriteNote(favNotTd);
+
+
+        return CommonUtil.createBuildResponseMessage("Removed Favorite", HttpStatus.OK);
+    }
+
+
+    @GetMapping("/fav-note")
+    public ResponseEntity<?> getUser() throws Exception {
+        int userId = 2;
+        List<FavouriteNoteDto> userFavoritesNotes = notesService.getFavouriteNotes(userId);
+        if (CollectionUtils.isEmpty(userFavoritesNotes)) {
+            return  CommonUtil.createErrorResponseMessage("", HttpStatus.NO_CONTENT);
+        }
+
+
+        return CommonUtil.createBuildResponse(userFavoritesNotes, HttpStatus.OK);
     }
 
 
