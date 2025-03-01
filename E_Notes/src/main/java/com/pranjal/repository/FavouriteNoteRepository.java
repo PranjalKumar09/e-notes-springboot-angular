@@ -1,24 +1,14 @@
 package com.pranjal.repository;
 
-import com.pranjal.enitity.Notes;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.pranjal.dto.FavouriteNoteDto;
+import com.pranjal.enitity.FavouriteNote;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface FavouritesNotesRepository extends JpaRepository<Notes, Integer> {
+public interface FavouriteNoteRepository extends JpaRepository<FavouriteNote, Integer> {
 
-
-
-    Page<Notes> findByCreatedBy(Integer userId, Pageable pageable);
-
-    List<Notes> findByCreatedByAndIsDeletedTrue(Integer userId);
-
-    Page<Notes> findByCreatedByAndIsDeletedFalse(Integer userId, Pageable pageable);
-
-    List<Notes> findByIsDeletedAndDeletedAtBefore(boolean b, LocalDateTime cutoffDate);
+    List<FavouriteNote> findByUserId(Integer userId);
 }
