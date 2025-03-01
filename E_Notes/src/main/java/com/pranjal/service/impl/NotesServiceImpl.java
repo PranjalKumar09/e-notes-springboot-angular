@@ -2,12 +2,15 @@ package com.pranjal.service.impl;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pranjal.dto.FavouriteNoteDto;
 import com.pranjal.dto.NotesDto;
 import com.pranjal.dto.NotesResponse;
+import com.pranjal.enitity.FavouriteNote;
 import com.pranjal.enitity.FileDetails;
 import com.pranjal.enitity.Notes;
 import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.repository.CategoryRepository;
+import com.pranjal.repository.FavouriteNoteRepository;
 import com.pranjal.repository.FileDetailsRepository;
 import com.pranjal.repository.NotesRepository;
 import com.pranjal.service.NotesService;
@@ -46,8 +49,8 @@ public class NotesServiceImpl implements NotesService {
     private ModelMapper modelMapper;
     @Autowired
     private CategoryRepository categoryRepository;
-
-
+    @Autowired
+    private FavouriteNoteRepository favouriteNoteRepository;
     @Autowired
     private FileDetailsRepository fileDetailsRepository;
     @Value("${file.upload.path}")
@@ -222,4 +225,35 @@ public class NotesServiceImpl implements NotesService {
 
     }
 
+
+
+    @Override
+    public void favouriteNote(Integer noteId) throws  Exception{
+        Integer userId  = 2;
+        Notes notes    = notesRepository.findById(noteId).orElseThrow(()->new ResourceNotFoundException("Invalid notes id!"));
+        FavouriteNote favouriteNote = FavouriteNote.builder()
+                .userId(userId)
+                .notes(notes)
+                .build();
+        favouriteNoteRepository.save(favouriteNote);
+
+    }
+
+    @Override
+    public void unFavouriteNote(Integer favouriteNoteId) throws  Exception{
+        FavouriteNote favouriteNote    = favouriteNoteRepository.findById(favouriteNoteId).orElseThrow(()->new ResourceNotFoundException("Favourite Note Not Found!"));
+        favouriteNoteRepository.delete(favouriteNote);
+
+    }
+
+    @Override
+    public List<FavouriteNoteDto> getFavouriteNotes(Integer userId) {
+        userId = 2;
+
+
+        return favouriteNoteRepository.findByUserId(userId)
+                .stream()
+                .map(favouriteNote -> modelMapper.map(favouriteNote, FavouriteNoteDto.class))
+                .toList();
+    }
 }

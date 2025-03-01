@@ -1,7 +1,9 @@
 package com.pranjal.service;
 
+import com.pranjal.dto.FavouriteNoteDto;
 import com.pranjal.dto.NotesDto;
 import com.pranjal.dto.NotesResponse;
+import com.pranjal.enitity.FavouriteNote;
 import com.pranjal.enitity.FileDetails;
 import com.pranjal.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -31,4 +33,9 @@ public interface NotesService {
     void hardDeleteNotes(Integer id) throws Exception;
 
     void emptyRecycleBin(Integer userId);
+
+    void favouriteNote(Integer noteId) throws  Exception;
+    void unFavouriteNote(Integer favouriteNoteId) throws  Exception ;
+    List<FavouriteNoteDto> getFavouriteNotes(Integer userId);
+
 }
