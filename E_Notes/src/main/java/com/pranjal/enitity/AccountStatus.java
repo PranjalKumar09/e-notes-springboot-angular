@@ -16,15 +16,10 @@ public class AccountStatus {
     private Integer id;
     private Boolean isActive;
     private String verificationCode;
+    private String passwordResetToken;
 
     @OneToOne(mappedBy = "status", optional = false)
     private User user;
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
