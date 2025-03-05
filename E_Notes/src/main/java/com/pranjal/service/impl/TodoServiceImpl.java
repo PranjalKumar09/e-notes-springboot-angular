@@ -6,6 +6,7 @@ import com.pranjal.enums.TodoStatus;
 import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.repository.TodoRepository;
 import com.pranjal.service.TodoService;
+import com.pranjal.util.CommonUtil;
 import com.pranjal.util.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public List<TodoDto> getTodoByUser() {
-        Integer userId = 2;
+        Integer userId = CommonUtil.getLoggedInUser().getId();;
         List<Todo> todoList= todoRepository.getTodosByCreatedBy(userId);
 
         List<TodoDto> todoDtoList = todoList.stream().map(todo -> modelMapper.map(todo, TodoDto.class)).toList();

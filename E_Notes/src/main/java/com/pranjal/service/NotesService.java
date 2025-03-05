@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @Service
-public interface NotesService {
+public interface    NotesService {
     Boolean saveNotes(String notesDto, MultipartFile file) throws  Exception;
     List<NotesDto> getAllNotes();
 
@@ -36,7 +36,7 @@ public interface NotesService {
 
     void favouriteNote(Integer noteId) throws  Exception;
     void unFavouriteNote(Integer favouriteNoteId) throws  Exception ;
-    List<FavouriteNoteDto> getFavouriteNotes(Integer userId);
+    List<FavouriteNoteDto> getFavouriteNotes();
 
     Boolean  copyNotes(Integer id) throws Exception;
 }
