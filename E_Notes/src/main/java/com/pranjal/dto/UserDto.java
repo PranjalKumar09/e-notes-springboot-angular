@@ -11,14 +11,23 @@ import java.util.List;
 @Setter
 @Builder
 public class UserDto {
-    private List<NotesDto> notes;
 
-    private int pageNo;
-    private int pageSize;
-    private long totalElements;
-    private int totalPages;
-    private Boolean isFirst;
-    private Boolean isLast;
+    private Integer id;
+    private String firstName;
+    private String LastName;
+    private String email;
+    private String password;
+    private String mobno;
 
+    private List<RoleDto> roles;
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    @Builder
+    public static class RoleDto {
+        private Integer id;
+        private String name;
+    }
 }
