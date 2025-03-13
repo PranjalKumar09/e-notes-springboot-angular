@@ -1,6 +1,7 @@
 package com.pranjal.controller;
 
 
+import com.pranjal.config.AuditAwareConfig;
 import com.pranjal.dto.FavouriteNoteDto;
 import com.pranjal.dto.NotesDto;
 import com.pranjal.dto.NotesResponse;
@@ -67,7 +68,7 @@ public class NotesController {
     @GetMapping("/user-notes")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getAllUserNotes(@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-        Integer userId = 2;
+        Integer userId = CommonUtil.getLoggedInUser().getId();
         NotesResponse notesDtoList = notesService.getAllNotesByUser(userId, pageNo, pageSize);
 
         return CommonUtil.createBuildResponse(notesDtoList, HttpStatus.OK);
@@ -92,7 +93,7 @@ public class NotesController {
     @GetMapping("/recycle-bin")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getUserRecycleBinNotes() {
-        Integer userId = 2;
+        Integer userId = CommonUtil.getLoggedInUser().getId();
         List<NotesDto> notesDtoList  = notesService.getUserRecycleBinNotes(userId);
 
         return CommonUtil.createBuildResponse(notesDtoList, HttpStatus.OK);
@@ -110,7 +111,7 @@ public class NotesController {
     @DeleteMapping("/delete-recycle-bin")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> emptyRecycleBin()  {
-        Integer userId = 2;
+        Integer userId = CommonUtil.getLoggedInUser().getId();
 
         notesService.emptyRecycleBin(userId);
 
@@ -140,9 +141,8 @@ public class NotesController {
 
     @GetMapping("/fav-note")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getUser() throws Exception {
-        int userId = 2;
-        List<FavouriteNoteDto> userFavoritesNotes = notesService.getFavouriteNotes(userId);
+    public ResponseEntity<?> getUser() {
+        List<FavouriteNoteDto> userFavoritesNotes = notesService.getFavouriteNotes();
         if (CollectionUtils.isEmpty(userFavoritesNotes)) {
             return  CommonUtil.createErrorResponseMessage("", HttpStatus.NO_CONTENT);
         }

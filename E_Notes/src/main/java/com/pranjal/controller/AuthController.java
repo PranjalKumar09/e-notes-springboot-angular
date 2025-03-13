@@ -4,7 +4,7 @@ package com.pranjal.controller;
 import com.pranjal.dto.LoginRequest;
 import com.pranjal.dto.LoginResponse;
 import com.pranjal.dto.UserDto;
-import com.pranjal.service.UserService;
+import com.pranjal.service.AuthService;
 import com.pranjal.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     @Autowired
-    private UserService userService;
+    private AuthService userService;
 
     @PostMapping("/")
     private ResponseEntity<?> registerUser(@RequestBody UserDto userDto, HttpServletRequest request) throws Exception {

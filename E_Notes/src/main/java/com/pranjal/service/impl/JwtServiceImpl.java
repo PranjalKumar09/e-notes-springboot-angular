@@ -41,12 +41,11 @@ public class JwtServiceImpl implements JwtService {
     public String generateToken(User user) {
 
         Map<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
         claims.put("role", user.getRoles());
         claims.put("status", user.getStatus().getIsActive());
 
-        String token = Jwts.builder()
-                .claims()
-                .add(claims)
+        String token = Jwts.builder().claims().add(claims)
                 .subject(user.getEmail())
                 .issuedAt(new Date((System.currentTimeMillis())))
                 .expiration(new Date((System.currentTimeMillis() + (TOKEN_EXPIRES_IN_MILLISECOND))))

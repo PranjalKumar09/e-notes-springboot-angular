@@ -1,13 +1,17 @@
 package com.pranjal.service;
 
-import com.pranjal.dto.LoginRequest;
-import com.pranjal.dto.LoginResponse;
-import com.pranjal.dto.UserDto;
+import com.pranjal.dto.PasswordChangeRequest;
+import com.pranjal.dto.PswdResetRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    Boolean register(UserDto userDto, String url) throws Exception;
+    void  changePassword(PasswordChangeRequest passwordChangeRequest);
 
-    LoginResponse login(LoginRequest loginRequest);
+    void sendEmailPasswordReset(String email, HttpServletRequest httpServletRequest)  throws  Exception;
+
+    void verifyPaswdResetLink(Integer uid, String code) throws Exception;
+
+    void resetPassword(PswdResetRequest pswdResetRequest) throws Exception;
 }

@@ -1,11 +1,15 @@
 package com.pranjal.util;
 
+import com.pranjal.config.security.CustomUserDetails;
+import com.pranjal.dto.UserResponse;
+import com.pranjal.enitity.User;
 import com.pranjal.handler.GenericResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -143,5 +147,17 @@ public class CommonUtil {
         String apiUrl = request.getRequestURL().toString();
         apiUrl = apiUrl.replace(request.getServletPath(), "");
         return apiUrl;
+    }
+
+    public static User getLoggedInUser(){
+
+        try{
+        CustomUserDetails logUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return logUser.getUser();
+
+        }catch (Exception e){
+            throw e;
+        }
+
     }
 }

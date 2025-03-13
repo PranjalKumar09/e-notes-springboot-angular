@@ -14,6 +14,7 @@ import com.pranjal.repository.FavouriteNoteRepository;
 import com.pranjal.repository.FileDetailsRepository;
 import com.pranjal.repository.NotesRepository;
 import com.pranjal.service.NotesService;
+import com.pranjal.util.CommonUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,8 +243,8 @@ public class NotesServiceImpl implements NotesService {
     }
 
     @Override
-    public List<FavouriteNoteDto> getFavouriteNotes(Integer userId) {
-        userId = 2;
+    public List<FavouriteNoteDto> getFavouriteNotes() {
+        Integer userId = CommonUtil.getLoggedInUser().getId();
 
 
         return favouriteNoteRepository.findByUserId(userId)
