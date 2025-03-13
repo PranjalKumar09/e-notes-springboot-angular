@@ -1,15 +1,13 @@
 package com.pranjal.enitity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,14 +16,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class User {
-    @jakarta.persistence.Id
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     private Integer id;
-    private String uploadFileName;
-    private String originalFileName;
-    private String displayFileName;
-    private String path;
-    private Long fileSize;
+    private String firstName;
+    private String LastName;
+    private String email;
+    private String password;
+    private String mobno;
+
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Role> roles;
 
 }
