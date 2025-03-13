@@ -1,14 +1,22 @@
-# Compiled class file
+# Java compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
+*.log.*
 
 # BlueJ files
 *.ctxt
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
+
+# IntelliJ IDEA specific files
+.idea/
+*.iml
+out/
+*.ipr
+*.iws
 
 # Package Files #
 *.jar
@@ -19,6 +27,67 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Maven specific
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# Gradle specific
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Node.js (Frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# MySQL dumps and files
+*.sql
+*.sql.gz
+
+# Virtual machine crash logs
 hs_err_pid*
 replay_pid*
+
+# Docker
+*.env
+Dockerfile
+docker-compose.override.yml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Coverage and test results
+/coverage/
+*.lcov
+/test-output/
+
+# SonarQube
+/.scannerwork/
+/.sonar/
+
+# JMeter
+*.jtl
+
+# JetBrains IDE files
+*.idea/
+*.ijwb/
+
+# Temporary files
+*.swp
+*.tmp
+*.bak
+*.backup
+
+
+*application.properties
+*application-dev.properties
+zRequests.txt
+

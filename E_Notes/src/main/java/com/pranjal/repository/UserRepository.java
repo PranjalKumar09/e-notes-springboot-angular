@@ -1,0 +1,13 @@
+package com.pranjal.repository;
+
+import com.pranjal.enitity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+
+    boolean existsByEmail(String email);
+
+    User findByEmail(String username);
+}
