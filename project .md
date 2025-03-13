@@ -661,3 +661,15 @@ now setting the password Reset Token option in verfiy option
 now we will implement the searching
     in notes by title,descriptoin, cateogry
     
+
+also maked many excpetions and all 
+
+
+
+
+now making all dev, user, conf 
+
+this is done to help different persons like tester, dev, conf  for setting theri things
+for tester
+
+similarly creating seprate dbs for al
