@@ -672,4 +672,12 @@ now making all dev, user, conf
 this is done to help different persons like tester, dev, conf  for setting theri things
 for tester
 
+
 similarly creating seprate dbs for al
+
+
+generally it is done squash & merge from dev to test
+
+now instead of creating multiple properties files just creating single yaml file
+
+
