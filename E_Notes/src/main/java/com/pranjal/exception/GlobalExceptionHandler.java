@@ -4,10 +4,13 @@ package com.pranjal.exception;
 import com.pranjal.util.CommonUtil;
 import com.pranjal.util.Validation;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.sqm.produce.function.FunctionArgumentException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -19,6 +22,34 @@ import java.nio.file.AccessDeniedException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    @ExceptionHandler(InvalidDataAccessApiUsageException.class)
+    public ResponseEntity<?> handleInvalidDataAccessApiUsageException(InvalidDataAccessApiUsageException e) {
+        log.error("GlobalExceptionHandler :: handleInvalidDataAccessApiUsageException ::", e);
+        return CommonUtil.createErrorResponseMessage(
+                "Invalid data access usage! " + e.getMessage(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    // Handle FunctionArgumentException (specific Hibernate exception)
+    @ExceptionHandler(FunctionArgumentException.class)
+    public ResponseEntity<?> handleFunctionArgumentException(FunctionArgumentException e) {
+        log.error("GlobalExceptionHandler :: handleFunctionArgumentException ::", e);
+        return CommonUtil.createErrorResponseMessage(
+                "Function argument mismatch: " + e.getMessage(),
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<?> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        log.error("GlobalExceptionHandler ::  handleMethodNotSupportedException ::", e);
+        return CommonUtil.createErrorResponseMessage(
+                "Invalid HTTP method! Expected: " + e.getSupportedHttpMethods(),
+                HttpStatus.METHOD_NOT_ALLOWED
+        );
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(Exception e) {
