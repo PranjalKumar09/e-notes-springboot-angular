@@ -13,4 +13,12 @@ public class Constants {
             MOBILE_REGEX = "^(\\+91[\\s]?)?[6-9]\\d{9}$";
 
     public static final Integer TOKEN_EXPIRES_IN_MILLISECOND = 24*60*60   *1000; // 24 hours
+
+
+    public static final String ROLE_ADMIN = "hasRole('ADMIN')";
+    public static final String ROLE_USER = "hasRole('USER')";
+    public static final String ROLE_ADMIN_USER = "hasAnyRole('USER', 'ADMIN')";
+
+    public static final String DEFAULT_PAGE_SIZE = "10";
+    public static final String DEFAULT_PAGE_NUMBER = "0";
 }

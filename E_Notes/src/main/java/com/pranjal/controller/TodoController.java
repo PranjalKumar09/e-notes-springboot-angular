@@ -5,6 +5,7 @@ import com.pranjal.dto.FavouriteNoteDto;
 import com.pranjal.dto.NotesDto;
 import com.pranjal.dto.NotesResponse;
 import com.pranjal.dto.TodoDto;
+import com.pranjal.endpoint.TodoEndpoint;
 import com.pranjal.enitity.FileDetails;
 import com.pranjal.service.NotesService;
 import com.pranjal.service.TodoService;
@@ -23,17 +24,15 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/todo")
-public class TodoController {
+public class TodoController implements TodoEndpoint {
     @Autowired
     private TodoService todoService;
     @Autowired
     private Validation validation;
 
 
-    @PostMapping("/")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> saveTodo(@RequestBody TodoDto todoDto) throws Exception {
+    @Override
+    public ResponseEntity<?> saveTodo(TodoDto todoDto) throws Exception {
 
         Boolean saveTodo = todoService.saveTodo(todoDto);
 
@@ -46,15 +45,13 @@ public class TodoController {
     }
 
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getById(@PathVariable Integer id) throws Exception{
+    @Override
+    public ResponseEntity<?> getById(Integer id) throws Exception{
        TodoDto todoDto = todoService.getTodoById(id);
        return CommonUtil.createBuildResponse(todoDto, HttpStatus.OK);
     }
 
-    @GetMapping("/list")
-    @PreAuthorize("hasRole('USER')")
+    @Override
     public ResponseEntity<?> getAllTodoByUser() throws Exception{
         List<TodoDto> todoDtoList = todoService.getTodoByUser();
         if (CollectionUtils.isEmpty(todoDtoList)){
