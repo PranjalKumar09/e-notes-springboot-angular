@@ -13,6 +13,7 @@ import com.pranjal.repository.UserRepository;
 import com.pranjal.service.JwtService;
 import com.pranjal.service.AuthService;
 import com.pranjal.util.Validation;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +26,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 import java.util.UUID;
 
-
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
     @Autowired
@@ -47,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean register(UserDto userDto, String url) throws Exception {
+        log.info("AuthServiceImpl : register() : Execution Start");
         validation.userValidation(userDto);
         User user = modelMapper.map(userDto, User.class);
 
@@ -62,10 +64,13 @@ public class AuthServiceImpl implements AuthService {
 
         if (!ObjectUtils.isEmpty(savedUser)) {
 //            emailSendForRegister(user,url); // TODO uncomment this line at last
+            log.info("message : {}", "Email send success");
+            log.info("AuthServiceImpl : register() : Execution End");
             return true;
         }
 
-            return false;
+        log.info("Error : {}", "User not saved");
+        return false;
     }
 
     @Override
