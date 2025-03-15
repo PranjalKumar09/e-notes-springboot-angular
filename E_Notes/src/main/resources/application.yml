@@ -24,13 +24,16 @@ file:
 ---
 # dev
 spring:
+  config:
+    activate:
+      on-profile: dev
   mail:
     username: EMAIL@gmail.com
     password: password
 
 
   datasource:
-    url: mysql://localhost:3306/enotes_dev
+    url: jdbc:mysql://localhost:3306/enotes_dev
     username: root
     password: 09072005
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -44,7 +47,7 @@ spring:
 
 
   datasource:
-    url: mysql://localhost:3306/enotes_prod
+    url: jdbc:mysql://localhost:3306/enotes_prod
     username: root
     password: 09072005
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -56,12 +59,12 @@ spring:
     activate:
       on-profile: test
   mail:
-    username: [[${email}]]
-    password: [[${password}]]
+    username: "[[${email}]]"
+    password: "[[${password}]]"
 
 
   datasource:
-    url: mysql://localhost:3306/enotes_test
+    url: jdbc:mysql://localhost:3306/enotes_test
     username: root
     password: 09072005
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -75,12 +78,13 @@ spring:
     activate:
       on-profile: uat
   mail:
-    username: [[${email}]]
-    password: [[${password}]]
+    username: "[[${email}]]"
+    password: "[[${password}]]"
 
 
   datasource:
-    url: mysql://localhost:3306/enotes_util
+    url: jdbc:mysql://localhost:3306/enotes_util
     username: root
     password: 09072005
     driver-class-name: com.mysql.cj.jdbc.Driver
+---
