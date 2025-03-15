@@ -681,3 +681,45 @@ generally it is done squash & merge from dev to test
 now instead of creating multiple properties files just creating single yaml file
 
 
+now implementing the logging
+
+firstly in homecontrollerby 
+
+
+    Logger logger = LoggerFactory.getLogger(HomeController.class);
+
+    @Autowired
+    private HomeService homeService;
+    @Autowired
+    private UserService userService;
+
+
+    @GetMapping("/verify")
+    private ResponseEntity<?> verifyUserAccount(@RequestParam Integer id,@RequestParam String vc) throws Exception {
+        logger.info("HomeController : verifyUserAccount : Execution Start");
+        
+        Boolean verfifyAccount = homeService.verifyAccount(id, vc);
+        if (verfifyAccount)
+            return CommonUtil.createBuildResponseMessage("Verification success", HttpStatus.CREATED);
+        logger.info("HomeController : verifyUserAccount : Execution End");
+        return CommonUtil.createErrorResponseMessage("Invalid Verification link ", HttpStatus.BAD_REQUEST );
+    }
+
+logger is from Sl4jk 
+
+
+now this is good but not this is for short , know better to use in CommonUtils
+
+same thing can we done as
+@Slf4j
+public class HomeServiceImpl implements HomeService {
+    @Autowired
+    private UserRepository userRepository;
+
+
+    @Override
+    public Boolean verifyAccount(Integer userId, String verificationId) throws  Exception{
+        log.info("HomeController : verifyUserAccount()");
+
+
+"Password@123"

@@ -14,4 +14,6 @@ public interface UserService {
     void verifyPaswdResetLink(Integer uid, String code) throws Exception;
 
     void resetPassword(PswdResetRequest pswdResetRequest) throws Exception;
+
+//    boolean findByEmail(String email);
 }

@@ -2,6 +2,7 @@ package com.pranjal.config.security;
 
 import com.pranjal.enitity.User;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Setter
 @Getter
 public class CustomUserDetails implements UserDetails {
 
@@ -21,18 +23,12 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
     }
 
-        @Override
-        public Collection<? extends GrantedAuthority> getAuthorities() {
-            List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
 
-
-
-        return authorities;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    return authorities;
     }
 
     @Override
