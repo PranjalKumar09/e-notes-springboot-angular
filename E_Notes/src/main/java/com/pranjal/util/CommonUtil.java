@@ -5,16 +5,18 @@ import com.pranjal.dto.UserResponse;
 import com.pranjal.enitity.User;
 import com.pranjal.handler.GenericResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.List;
 
-
+@Slf4j
 public class CommonUtil {
 
     public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus status) {
@@ -27,7 +29,6 @@ public class CommonUtil {
                 .build();
         return response.create();
     }
-
     public static ResponseEntity<?> createBuildResponseMessage( String message, HttpStatus status) {
 
         GenericResponse response = GenericResponse.builder()
@@ -57,7 +58,6 @@ public class CommonUtil {
                 .build();
         return response.create();
     }
-
 
     public static String getContentType(String originalFileName) {
         if (originalFileName == null || originalFileName.isEmpty()) {
@@ -152,12 +152,20 @@ public class CommonUtil {
     public static User getLoggedInUser(){
 
         try{
-        CustomUserDetails logUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return logUser.getUser();
+
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || authentication.getPrincipal() == null || authentication.getPrincipal().equals("anonymousUser")) {
+                log.warn("No authenticated user found, returning null.");
+                return null;  // Or return a default User object if needed
+            }
+
+            CustomUserDetails logUser = (CustomUserDetails) authentication.getPrincipal();
+            return logUser.getUser();
+
 
         }catch (Exception e){
+            e.printStackTrace();
             throw e;
         }
-
     }
 }
