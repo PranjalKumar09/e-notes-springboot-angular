@@ -4,6 +4,7 @@ package com.pranjal.controller;
 import com.pranjal.dto.LoginRequest;
 import com.pranjal.dto.LoginResponse;
 import com.pranjal.dto.UserDto;
+import com.pranjal.endpoint.AuthEndpoint;
 import com.pranjal.service.AuthService;
 import com.pranjal.util.CommonUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,18 +18,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthController implements AuthEndpoint {
     @Autowired
     private AuthService authService;
 
-    @PostMapping("/register")
-    private ResponseEntity<?> registerUser(@RequestBody UserDto userDto, HttpServletRequest request) throws Exception {
-        log.info("AuthController : registerUser() : Execution Start");
-        String url = CommonUtil.getUrl(request) ;
+    @Override
+    public ResponseEntity<?> registerUser(UserDto userDto, HttpServletRequest request) throws Exception {
+     log.info("AuthController : registerUser() : Execution Start");
+        String url =CommonUtil.getUrl(request) ;
 
         Boolean register = authService.register(userDto, url);
         if (register) {
@@ -39,8 +38,8 @@ public class AuthController {
         return CommonUtil.createErrorResponseMessage("Register Failed", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    @Override
+    public ResponseEntity<?> login(LoginRequest loginRequest) {
         LoginResponse loginResponse =  authService.login(loginRequest);
 
         if (ObjectUtils.isEmpty(loginResponse)) {

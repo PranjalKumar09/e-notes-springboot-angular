@@ -3,6 +3,7 @@ package com.pranjal.controller;
 
 import com.pranjal.dto.PasswordChangeRequest;
 import com.pranjal.dto.UserResponse;
+import com.pranjal.endpoint.UserEndpoint;
 import com.pranjal.enitity.User;
 import com.pranjal.service.UserService;
 import com.pranjal.util.CommonUtil;
@@ -21,8 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user")
-public class UserController {
+public class UserController implements UserEndpoint {
 
     @Autowired
     private ModelMapper modelMapper;
@@ -30,15 +30,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/profile")
+    @Override
     public ResponseEntity<?> getProfile() {
         User loggedInUser = CommonUtil.getLoggedInUser();
         UserResponse userResponse = modelMapper.map(loggedInUser, UserResponse.class);
         return CommonUtil.createBuildResponse(userResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/chng-pswd")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequest passwordChangeRequest) {
+    @Override
+    public ResponseEntity<?> changePassword(PasswordChangeRequest passwordChangeRequest) {
        userService.changePassword(passwordChangeRequest);
         return CommonUtil.createBuildResponseMessage("Password change success", HttpStatus.OK);
     }
