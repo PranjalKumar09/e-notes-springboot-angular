@@ -32,14 +32,24 @@ import java.io.IOException;
 
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+            log.info("JwtFilter : doFilterInternal() : Execution Start");
             try {
 
                 String requestPath = request.getRequestURI();
-                if (requestPath.startsWith("/api/v1/auth/") || requestPath.startsWith("/api/v1/home/")) {
+                log.info("Message :{}", requestPath);
+                if (
+                        requestPath.startsWith("/api/v1/auth/") ||
+                        requestPath.startsWith("/api/v1/home/") ||
+                        requestPath.startsWith("/enotes-doc/") ||
+                        requestPath.startsWith("/enotes-api-docs/") ||
+                        requestPath.startsWith("/webjars/")
+                ) {
+
                     log.info("Skipping JWT Filter for: {}", requestPath);
                     filterChain.doFilter(request, response);
                     return;
                 }
+
 
                 String authHeader = request.getHeader("Authorization");
                 String token = null;
@@ -68,6 +78,7 @@ import java.io.IOException;
                 generateResponseError(response, e);
                 return;
             }
+            log.info("JwtFilter : doFilterInternal() : Execution End");
                 filterChain.doFilter(request, response);
         }
 

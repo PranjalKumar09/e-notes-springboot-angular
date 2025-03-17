@@ -51,19 +51,33 @@ public class SecurityConfig  {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         log.info("SecurityConfig : securityFilterChain() : Execution Start");
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(req -> req.requestMatchers("/api/v1/auth/**", "/api/v1/home/**")
-                        .permitAll().anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
+
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        // Allow unauthenticated access to Swagger and public endpoints
+                        .requestMatchers(
+                                "/api/v1/auth/**",
+                                "/api/v1/home/**",
+                                "/enotes-doc/**",
+                                "/enotes-api-docs/**",
+                                "/webjars/**"
+                        ).permitAll()
+
+                        // All other requests require authentication
+                        .anyRequest().authenticated()
+                )
+                // Use stateless sessions (best for REST APIs)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Enable basic HTTP auth (if needed)
+                .httpBasic(Customizer.withDefaults())
+                // Add JWT filter before default authentication filter
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-
-        log.info("SecurityConfig : securityFilterChain() : Execution Start");
+        log.info("SecurityConfig : securityFilterChain() : Execution Complete");
 
         return http.build();
     }
