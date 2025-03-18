@@ -1,4 +1,13 @@
 package com.pranjal.util;
 
-public class Constant {
+import java.util.Arrays;
+import java.util.List;
+
+public class Constants {
+    public static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "png", "pdf", "docx", "xlsx");
+    public static final String  NAME_REGEX  = "^[A-Za-z]{2,50}$",
+            PASSWORD_REGEX =  "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$",
+            EMAIL_REGEX =  "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
+            MOBILE_REGEX = "^(\\+\\d{1,3}[- ]?)?\\d{10}$";
+
 }
