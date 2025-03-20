@@ -105,7 +105,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(AccessDeniedException e){
+    public ResponseEntity<?> handleException(Exception e){
         log.error("Exception : {}", e.getMessage()); 
         return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.FORBIDDEN);
     }
