@@ -8,8 +8,9 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class FavouriteNoteDto {
-    private Integer id;
-    private NotesDto notes;
-    private Integer userId;
+public class EmailRequest {
+    private String to;
+    private String subject;
+    private String title;
+    private String message;
 }
