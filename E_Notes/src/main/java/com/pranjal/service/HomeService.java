@@ -1,4 +1,10 @@
 package com.pranjal.service;
 
-public class HomeService {
+
+import org.springframework.stereotype.Service;
+
+@Service
+public interface HomeService {
+
+    Boolean verifyAccount(Integer userId, String verificationId)throws  Exception;
 }
