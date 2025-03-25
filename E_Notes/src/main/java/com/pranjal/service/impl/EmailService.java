@@ -26,7 +26,7 @@ public class EmailService {
         mimeMessageHelper.setFrom(mailFrom, emailRequest.getTitle());
         mimeMessageHelper.setTo(emailRequest.getTo());
         mimeMessageHelper.setSubject(emailRequest.getSubject());
-        mimeMessageHelper.setText(emailRequest.getMessage());
+        mimeMessageHelper.setText(emailRequest.getMessage(), true);
 
         mailSender.send(mimeMessage);
     }
