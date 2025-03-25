@@ -11,8 +11,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    properties.mail.smtp.auth : true
-    properties.mail.smtp.starttls.enable : true
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
   profiles:
     active: dev
 
@@ -20,18 +20,25 @@ file:
   upload:
     path: notes/
 
+springdoc:
+  api-docs:
+    path: /enotes-api-docs
+  swagger-ui:
+    path: /enotes-doc/
+    operationsSorter: method
 
 ---
-# dev
+
+# 🔧 Development profile
 spring:
   config:
     activate:
       on-profile: dev
+  server:
+    port: 8080
   mail:
     username: EMAIL@gmail.com
     password: password
-
-
   datasource:
     url: jdbc:mysql://localhost:3306/enotes_dev
     username: root
@@ -39,13 +46,14 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 ---
-# prod
+
+# 🚀 Production profile
 spring:
   config:
     activate:
       on-profile: prod
-
-
+  server:
+    port: 8082
   datasource:
     url: jdbc:mysql://localhost:3306/enotes_prod
     username: root
@@ -53,38 +61,37 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 ---
-# test
+
+# 🧪 Test profile
 spring:
   config:
     activate:
       on-profile: test
+  server:
+    port: 8081
   mail:
     username: "[[${email}]]"
     password: "[[${password}]]"
-
-
   datasource:
     url: jdbc:mysql://localhost:3306/enotes_test
     username: root
     password: 09072005
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-
-
 ---
-# uat
+
+# 🔬 UAT profile
 spring:
   config:
     activate:
       on-profile: uat
+  server:
+    port: 8090
   mail:
     username: "[[${email}]]"
     password: "[[${password}]]"
-
-
   datasource:
     url: jdbc:mysql://localhost:3306/enotes_util
     username: root
     password: 09072005
     driver-class-name: com.mysql.cj.jdbc.Driver
----
