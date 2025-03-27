@@ -4,6 +4,7 @@ package com.pranjal.controller;
 import com.pranjal.dto.UserDto;
 import com.pranjal.service.UserService;
 import com.pranjal.util.CommonUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +14,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
     @Autowired
     private UserService userService;
 
     @PostMapping("/")
-    private ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
-        Boolean register = userService.register(userDto);
+    private ResponseEntity<?> registerUser(@RequestBody UserDto userDto, HttpServletRequest request) throws Exception {
+        String url =CommonUtil.getUrl(request) ;
+
+        Boolean register = userService.register(userDto, url);
         if (register) {
             return CommonUtil.createBuildResponseMessage("Register Success", HttpStatus.CREATED);
         }
