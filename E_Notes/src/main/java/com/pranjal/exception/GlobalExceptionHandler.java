@@ -18,7 +18,6 @@ import java.io.IOException;
 public class GlobalExceptionHandler {
 
 
-
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(Exception e) {
         log.error("GlobalExceptionHandler ::  handleIllegalArgumentException ::", e);
@@ -58,6 +57,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileNotFoundException.class)
     public ResponseEntity<?> handleFileNotFoundException(ResourceNotFoundException e){
         log.error("ResourceNotFoundException ::  FileNotFoundException");
+        return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> exception(Exception e) {
+        log.error("GlobalExceptionHandler :: Exception ::", e);
         return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
