@@ -1,9 +1,10 @@
 package com.pranjal.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.Column;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -15,37 +16,22 @@ import java.util.Date;
 public class TodoDto {
     private Integer id;
     private String title;
-    private String description;
-    private CategoryDto category;
+    private StatusDto status;
+
 
     private Integer createdBy;
     private Date createdOn;
     private Integer updateBy;
     private Date updateOn;
 
-    private Boolean isDeleted;
-    private LocalDateTime deletedAt;
-
-    private FilesDto fileDetails;
-
-
-
-    @Getter
-    @Setter
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CategoryDto{
+    @Getter
+    @Setter
+    public static class StatusDto {
         private Integer id;
         private String name;
-    };
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class FilesDto{
-        private Integer id;
-        private String originalFileName;
-        private String displayFileName;
-    };
+    }
 }
+
