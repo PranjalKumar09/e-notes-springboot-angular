@@ -19,17 +19,6 @@ public class Todo extends BaseModel{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
-    private String description;
-
-
-
-    @ManyToOne
-    private Category category;
-
-    @ManyToOne
-    private FileDetails fileDetails;
-
-    private Boolean isDeleted;
-    private LocalDateTime deletedAt;
-
+    @Column(name = "status")
+    private Integer statusId;
 }
