@@ -5,9 +5,11 @@ import com.pranjal.dto.TodoDto;
 import com.pranjal.dto.UserDto;
 import com.pranjal.enitity.Role;
 import com.pranjal.enums.TodoStatus;
+import com.pranjal.exception.ExistDataException;
 import com.pranjal.exception.ResourceNotFoundException;
 import com.pranjal.exception.ValidationException;
 import com.pranjal.repository.RoleRepository;
+import com.pranjal.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,8 @@ import java.util.regex.Pattern;
 public class Validation {
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public void CategoryValidation(CategoryDto categoryDto) {
         Map<String, Object> error = new LinkedHashMap<>();
@@ -94,6 +98,8 @@ public class Validation {
 
         if (StringUtils.isBlank(userDto.getEmail()) || !isValidEmail(userDto.getEmail())) {
             throw new IllegalArgumentException("Invalid email format.");
+        } else if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new ExistDataException("Email already exists.");
         }
 
         if (StringUtils.isBlank(userDto.getPassword()) || !isValidPassword(userDto.getPassword())) {
