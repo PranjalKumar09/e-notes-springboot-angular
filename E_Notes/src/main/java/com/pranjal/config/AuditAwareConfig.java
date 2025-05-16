@@ -21,6 +21,6 @@ public class AuditAwareConfig implements AuditorAware<Integer> {
         } else {
             log.debug("No logged-in user, using default auditor: 0");
             return Optional.of(0);
-        }
+        }   
     }
 }
