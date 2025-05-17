@@ -1,5 +1,6 @@
 package com.pranjal.config.security;
 
+import com.pranjal.util.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig  {
-    @Autowired
-    private UserDetailsService userDetailsService;
+
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -39,13 +39,13 @@ public class SecurityConfig  {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
-//		provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
-        return provider;
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -56,15 +56,9 @@ public class SecurityConfig  {
         log.info("SecurityConfig : securityFilterChain() : Execution Start");
 
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // Allow unauthenticated access to Swagger and public endpoints
-                        .requestMatchers(
-                                "/api/v1/auth/**",
-                                "/api/v1/home/**",
-                                "/enotes-doc/**",
-                                "/enotes-api-docs/**",
-                                "/webjars/**"
+                        .requestMatchers(Constants.PUBLIC_PATHS
                         ).permitAll()
 
                         // All other requests require authentication

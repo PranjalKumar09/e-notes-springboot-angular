@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pranjal.enitity.User;
 import com.pranjal.handler.GenericResponse;
 import com.pranjal.service.JwtService;
+import com.pranjal.util.Constants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,80 +21,85 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
-    @Slf4j
-    @Component
-    public class JwtFilter extends OncePerRequestFilter {
-        @Autowired
-        private JwtService jwtService;
+@Slf4j
+@Component
+public class JwtFilter extends OncePerRequestFilter {
+    private final JwtService jwtService;
+    private final UserDetailsServiceImpl userDetailsService;
 
-        @Autowired
-        private UserDetailsServiceImpl userDetailsService;
+    public JwtFilter(JwtService jwtService, UserDetailsServiceImpl userDetailsService) {
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+    }
 
-        @Override
-        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-            log.info("JwtFilter : doFilterInternal() : Execution Start");
-            try {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("JwtFilter : doFilterInternal() : Execution Start");
+        try {
 
-                String requestPath = request.getRequestURI();
-                log.info("Message :{}", requestPath);
-                if (
-                        requestPath.startsWith("/api/v1/auth/") ||
-                        requestPath.startsWith("/api/v1/home/") ||
-                        requestPath.startsWith("/enotes-doc/") ||
-                        requestPath.startsWith("/enotes-api-docs/") ||
-                        requestPath.startsWith("/webjars/")
-                ) {
+            String requestPath = request.getRequestURI();
+            log.info("Message :{}", requestPath);
+//                if (
+//                        requestPath.startsWith("/api/v1/auth/") ||
+//                        requestPath.startsWith("/api/v1/home/") ||
+//                        requestPath.startsWith("/enotes-doc/") ||
+//                        requestPath.startsWith("/enotes-api-docs/") ||
+//                        requestPath.startsWith("/webjars/")
+//                )
+            if (Arrays.stream(Constants.PUBLIC_PATHS).anyMatch(requestPath::startsWith))
+            {
 
-                    log.info("Skipping JWT Filter for: {}", requestPath);
-                    filterChain.doFilter(request, response);
-                    return;
-                }
-
-
-                String authHeader = request.getHeader("Authorization");
-                String token = null;
-                String username = null;
-                if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    token = authHeader.substring(7);  // Extract token
-                    username = jwtService.extractUsername(token);
-                    log.info("Extracted username: {}", username);
-                }
-
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    if (jwtService.validateToken(token, userDetails)) {
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken( new CustomUserDetails((User) userDetails), null, userDetails.getAuthorities()
-                                );
-                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        log.info("Authentication set for user: {}", username);
-                    } else {
-                        log.warn("JWT validation failed for user: {}", username);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Error during token authentication: {}", e.getMessage());
-                generateResponseError(response, e);
+                log.info("Skipping JWT Filter for: {}", requestPath);
+                filterChain.doFilter(request, response);
                 return;
             }
-            log.info("JwtFilter : doFilterInternal() : Execution End");
-                filterChain.doFilter(request, response);
+
+
+            String authHeader = request.getHeader("Authorization");
+            String token = null;
+            String username = null;
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7);  // Extract token
+                username = jwtService.extractUsername(token);
+                log.info("Extracted username: {}", username);
+            }
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                if (jwtService.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken( new CustomUserDetails((User) userDetails), null, userDetails.getAuthorities()
+                            );
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.info("Authentication set for user: {}", username);
+                } else {
+                    log.warn("JWT validation failed for user: {}", username);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error during token authentication: {}", e.getMessage());
+            generateResponseError(response, e);
+            return;
         }
-
-
-        private void generateResponseError(HttpServletResponse response, Exception e) throws IOException {
-            response.setContentType("application/json");
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
-            Object body =   GenericResponse.builder()
-                    .status("failed")
-                    .message(e.getMessage())
-                    .responseStatus(HttpStatus.UNAUTHORIZED)
-                    .build().create().getBody();
-
-            response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-
-        }
+        log.info("JwtFilter : doFilterInternal() : Execution End");
+            filterChain.doFilter(request, response);
     }
+
+
+    private void generateResponseError(HttpServletResponse response, Exception e) throws IOException {
+        response.setContentType("application/json");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+        Object body =   GenericResponse.builder()
+                .status("failed")
+                .message(e.getMessage())
+                .responseStatus(HttpStatus.UNAUTHORIZED)
+                .build().create().getBody();
+
+        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+
+    }
+}
