@@ -29,7 +29,7 @@ public class AuthController implements AuthEndpoint {
      log.info("AuthController : registerUser() : Execution Start");
         String url =CommonUtil.getUrl(request) ;
 
-        Boolean register = authService.register(userDto, url);
+        boolean register = authService.register(userDto, url);
         if (register) {
             log.info("AuthController : registerUser() : Execution End");
             return CommonUtil.createBuildResponseMessage("Register Success", HttpStatus.CREATED);

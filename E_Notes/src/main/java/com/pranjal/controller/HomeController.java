@@ -27,7 +27,7 @@ public class HomeController implements HomeEndpoint {
     @Override
     public ResponseEntity<?> registerUser(Integer id,String vc) throws Exception {
       logger.info("HomeController : verifyUserAccount()");
-        Boolean verfifyAccount = homeService.verifyAccount(id, vc);
+        boolean verfifyAccount = homeService.verifyAccount(id, vc);
         if (verfifyAccount)
             return CommonUtil.createBuildResponseMessage("Verification success", HttpStatus.CREATED);
         return CommonUtil.createErrorResponseMessage("Invalid Verification link ", HttpStatus.BAD_REQUEST );
