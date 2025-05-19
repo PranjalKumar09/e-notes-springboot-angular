@@ -9,6 +9,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +23,19 @@ import java.util.Map;
 
 import static com.pranjal.util.Constants.TOKEN_EXPIRES_IN_MILLISECOND;
 
+@Slf4j
 @Service
 public class JwtServiceImpl implements JwtService {
     private String secretKey = "";
 
     public JwtServiceImpl() {
+        log.info("JwtServiceImpl instantiated");
         try{
             KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGenerator.generateKey();
             secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            log.error("Error while generating secret key: {}", e.getMessage(), e);        }
 
     }
 

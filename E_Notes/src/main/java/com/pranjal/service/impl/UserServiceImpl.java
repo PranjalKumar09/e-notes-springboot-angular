@@ -95,7 +95,8 @@ public class UserServiceImpl implements UserService {
 public void verifyPaswdResetLink(Integer uid, String code) throws Exception {
 
         User user =  userRepository.findById(uid).orElseThrow(()-> new ResourceNotFoundException("Invalid User"));
-        verifyPasswordRestLink(user.getStatus().getPasswordResetToken(), code);
+        verifyPasswordRestLink(user.getSt  .requestMatchers("/api/v1/auth/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/v1/product/**")atus().getPasswordResetToken(), code);
     }
 
     @Override
