@@ -164,8 +164,7 @@ public class CommonUtil {
 
 
         }catch (Exception e){
-            e.printStackTrace();
-            throw e;
+            log.error("Error while generating secret key: {}", e.getMessage(), e);            throw e;
         }
     }
 }

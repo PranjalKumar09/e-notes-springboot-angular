@@ -8,7 +8,6 @@ public class Constants {
 
 
     public static final String  NAME_REGEX  = "^[A-Za-z]{2,50}$",
-            PASSWORD_REGEX =  "^(?=.*[0-9])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$",
             EMAIL_REGEX =  "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
             MOBILE_REGEX = "^(\\+91[\\s]?)?[6-9]\\d{9}$";
 
@@ -21,4 +20,15 @@ public class Constants {
 
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_PAGE_NUMBER = "0";
+
+    public static final String[] PUBLIC_PATHS = {
+            "/api/v1/auth/**",
+            "/api/v1/home/**",
+            "/enotes-doc/**",
+            "/enotes-api-docs/**",
+            "/webjars/**",
+            "/actuator/**",
+    };
+
+
 }
