@@ -12,6 +12,7 @@ import com.pranjal.repository.RoleRepository;
 import com.pranjal.repository.UserRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
@@ -28,44 +29,60 @@ public class Validation {
     @Autowired
     private UserRepository userRepository;
 
+    @Value("${security.password-regex}")
+    private String passwordRegex;
+    private static final String DESCRIPTION_KEY = "description";
+
+
     public void CategoryValidation(CategoryDto categoryDto) {
         Map<String, Object> error = new LinkedHashMap<>();
+
         if (ObjectUtils.isEmpty(categoryDto)) {
             throw new IllegalArgumentException("Category Object/JSON should not be empty");
-        } else {
-
-            // validate name field
-            if (ObjectUtils.isEmpty(categoryDto.getName()))
-                error.put("name", "Name should not be empty");
-            else {
-                if (categoryDto.getName().length() > 50)
-                    error.put("name", "Name should not be longer than 255 characters");
-                else if (categoryDto.getName().length() < 2)
-                    error.put("name", "Name should not be shorter than 2 characters");
-            }
-
-            // Validation description
-            if (ObjectUtils.isEmpty(categoryDto.getDescription()))
-                error.put("description", "Description should not be empty");
-            else {
-                if (categoryDto.getDescription().length() > 255)
-                    error.put("description", "Description should not be longer than 255 characters");
-                else if (categoryDto.getDescription().length() < 10)
-                    error.put("description", "Description should not be shorter than 10 characters");
-            }
-
-            // Validation inActive
-            if (ObjectUtils.isEmpty(categoryDto.getIsActive()))
-                error.put("isActive", "IsActive should not be empty");
-            else{
-                if (categoryDto.getIsActive() != Boolean.TRUE.booleanValue() && categoryDto.getIsActive() != Boolean.FALSE.booleanValue())
-                    error.put("isActive", "IsActive should be true or false");
-            }
-
-
         }
-        if (!error.isEmpty())
+
+        validateName(categoryDto.getName(), error);
+        validateDescription(categoryDto.getDescription(), error);
+        validateIsActive(categoryDto.getIsActive(), error);
+
+        if (!error.isEmpty()) {
             throw new ValidationException(error);
+        }
+    }
+
+    private void validateName(String name, Map<String, Object> error) {
+        if (ObjectUtils.isEmpty(name)) {
+            error.put("name", "Name should not be empty");
+            return;
+        }
+
+        if (name.length() > 50) {
+            error.put("name", "Name should not be longer than 255 characters");
+        } else if (name.length() < 2) {
+            error.put("name", "Name should not be shorter than 2 characters");
+        }
+    }
+    private void validateDescription(String description, Map<String, Object> error) {
+        if (ObjectUtils.isEmpty(description)) {
+            error.put(DESCRIPTION_KEY, "Description should not be empty");
+            return;
+        }
+
+        if (description.length() > 255) {
+            error.put(DESCRIPTION_KEY, "Description should not be longer than 255 characters");
+        } else if (description.length() < 10) {
+            error.put(DESCRIPTION_KEY, "Description should not be shorter than 10 characters");
+        }
+    }
+    private void validateIsActive(Boolean isActive, Map<String, Object> error) {
+        if (ObjectUtils.isEmpty(isActive)) {
+            error.put("isActive", "IsActive should not be empty");
+            return;
+        }
+
+        if (isActive != Boolean.TRUE && isActive != Boolean.FALSE) {
+            error.put("isActive", "IsActive should be true or false");
+        }
     }
 
     public void validateTodoStatus(TodoDto todo) throws Exception {
@@ -141,7 +158,7 @@ public class Validation {
 
     private boolean isValidPassword(String password) {
         // At least 8 characters, 1 digit, 1 uppercase letter, 1 special character
-        return Pattern.compile(Constants.PASSWORD_REGEX).matcher(password).matches();
+        return Pattern.compile(passwordRegex).matcher(password).matches();
     }
 
     private boolean isValidMobileNumber(String mobno) {
